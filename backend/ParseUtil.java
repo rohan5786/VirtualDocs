@@ -16,18 +16,22 @@ public class ParseUtil {
         return new File("googoogaagaa");
     }
 
+    // kidney notes
     public static File kidneysRadiology(File rawText) {
         return new File("googoogaagaa");
     }
 
+    // bladder notes
     public static File bladderRadiology(File rawText) {
         return new File("googoogaagaa");
     }
 
+    // uterus notes
     public static File uterusRadiology(File rawText) {
         return new File("googoogaagaa");
     }
 
+    // general notes
     public static File patientNotesRadiology(File rawText) {
         return new File("googoogaagaa");
     }
