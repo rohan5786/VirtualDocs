@@ -1,6 +1,20 @@
 import java.io.File;
 
 public class ParseUtil {
+    /* 
+    as peddie cs server runs the mysql database locally, this will become: 
+    String url = "jdbc:mysql://PEDDIE_CS_SERVER_IP:3306/patient_database";
+
+    for now, everybody just runs the instance locally by:
+    -Rohan saves .sql file to github repo
+    -everybody (alan + diya) who clones repo just runs script in MySQL Workbench on their own now
+    -now everybody has a locally running instance
+
+    haven't exported since haven't added proper table/data management system yet
+    */
+    String url = "jdbc:mysql://localhost:3306/patient_database";
+    String user = "alan";
+    String pwd = "alanStinks123!";
 
     public static int patientBP(File rawText) {
         return 0;
