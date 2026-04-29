@@ -1,14 +1,14 @@
 import java.sql.*;
 
 public class Database {
+    private static Connection database_connection;
+    final String url = "jdbc:mysql://localhost:3306/patient_database";
+    final String user = Utils.db_user;
+    final String pwd = Utils.db_pwd;
 
-    private Connection database_connection;
+    public Database() {}
 
-    public Database() throws SQLException {
-        final String url = "jdbc:mysql://localhost:3306/patient_database";
-        final String user = Utils.db_user;
-        final String pwd = Utils.db_pwd;
-
+    public void config() throws SQLException {
         database_connection = DriverManager.getConnection(url, user, pwd);
     }
 
@@ -48,7 +48,19 @@ public class Database {
         return true;
     }
 
-    public Patient[] allPatients() {
-        return new Patient[] {};
+    // prints all users which are asked by some query (for testing)
+    public void onQuery(String sqlQuery) throws SQLException { 
+        PreparedStatement sql = database_connection.prepareStatement(sqlQuery);
+        
+        ResultSet res = sql.executeQuery();
+
+        while (res.next()) {
+            final String fn = res.getString("full_name");
+            final int id = res.getInt("id");
+            final String dob = res.getString("date_of_birth");
+            final String sex = res.getInt("sex") == 1 ? "Male" : "Female";
+
+            System.out.println(fn + " | " + id + " | " + dob + " | " + sex);
+        }
     }
 }
