@@ -1,12 +1,15 @@
 import java.sql.*;
 
+import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
+
 public class Database {
     private static Connection database_connection;
     final String url = "jdbc:mysql://localhost:3306/patient_database";
     final String user = Utils.db_user;
     final String pwd = Utils.db_pwd;
 
-    public Database() {}
+    public Database() {
+    }
 
     public void config() throws SQLException {
         database_connection = DriverManager.getConnection(url, user, pwd);
@@ -34,6 +37,14 @@ public class Database {
         sql.executeUpdate();
     }
 
+    public void removePatient(int patient_id) throws SQLException {
+        final String query = "DELETE FROM attributes WHERE patient_id = ?";
+        PreparedStatement sql = database_connection.prepareStatement(query);
+        sql.setInt(1, patient_id);
+
+        sql.executeUpdate();
+    }
+
     public Patient findPatientID(int ID) {
         // send query
         return new Patient();
@@ -48,15 +59,15 @@ public class Database {
         return true;
     }
 
-    // prints all users which are asked by some query (for testing)
-    public void onQuery(String sqlQuery) throws SQLException { 
+    // prints all users by some query's rules
+    public void onQuery(String sqlQuery) throws SQLException {
         PreparedStatement sql = database_connection.prepareStatement(sqlQuery);
-        
+
         ResultSet res = sql.executeQuery();
 
         while (res.next()) {
             final String fn = res.getString("full_name");
-            final int id = res.getInt("id");
+            final int id = res.getInt("patient_id");
             final String dob = res.getString("date_of_birth");
             final String sex = res.getInt("sex") == 1 ? "Male" : "Female";
 
