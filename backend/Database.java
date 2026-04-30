@@ -1,6 +1,6 @@
 import java.sql.*;
 
-import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
+// import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
 
 public class Database {
     private static Connection database_connection;
@@ -8,7 +8,8 @@ public class Database {
     final String user = Utils.db_user;
     final String pwd = Utils.db_pwd;
 
-    public Database() {}
+    public Database() {
+    }
 
     public void config() throws SQLException {
         database_connection = DriverManager.getConnection(url, user, pwd);
