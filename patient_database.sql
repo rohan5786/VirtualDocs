@@ -1,4 +1,22 @@
-INSERT INTO attributes
+CREATE DATABASE IF NOT EXISTS patient_database;
+USE patient_database;
+
+CREATE TABLE attributes (
+	full_name VARCHAR(100),
+    patient_id INT,
+	date_of_birth DATE,
+	sex TINYINT(1), #1 = male, 0 = female
+	allergies MEDIUMTEXT,
+	existing_medications MEDIUMTEXT,
+	phone_number VARCHAR(15),
+	address VARCHAR(75),
+	primary_provider VARCHAR(75),
+	insurance VARCHAR(75),
+	documents VARCHAR(150),
+	hippa_agreement TINYINT(1) # 1 = true, 0 = false
+ );
+ 
+INSERT INTO attributes 
 VALUES (
 	"Alan",
     1,

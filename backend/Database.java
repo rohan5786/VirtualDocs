@@ -5,19 +5,16 @@ import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
 public class Database {
     private static Connection database_connection;
     final String url = "jdbc:mysql://localhost:3306/patient_database";
-    final String user = "root";
-    final String pwd = "CPisEasy2025!";
+    final String user = Utils.db_user;
+    final String pwd = Utils.db_pwd;
 
-    public Database() {
-        
-    }
+    public Database() {}
 
     public void config() throws SQLException {
         database_connection = DriverManager.getConnection(url, user, pwd);
     }
 
     public void addPatient(Patient p) throws SQLException {
-
         // create query
         final String query = "INSERT INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = database_connection.prepareStatement(query);
