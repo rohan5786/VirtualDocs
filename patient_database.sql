@@ -1,35 +1,13 @@
-CREATE DATABASE IF NOT EXISTS patient_database;
-USE patient_database;
-
-CREATE TABLE attributes (
-	full_name VARCHAR(100),
+CREATE TABLE IF NOT EXISTS bp_logs(
     patient_id INT,
-	date_of_birth DATE,
-	sex TINYINT(1), #1 = male, 0 = female
-	allergies MEDIUMTEXT,
-	existing_medications MEDIUMTEXT,
-	phone_number VARCHAR(15),
-	address VARCHAR(75),
-	primary_provider VARCHAR(75),
-	insurance VARCHAR(75),
-	documents VARCHAR(150),
-	hippa_agreement TINYINT(1) # 1 = true, 0 = false
- );
- 
-INSERT INTO attributes 
-VALUES (
-	"Alan",
-    1,
-    "1927-01-01",
-    1,
-    "N/A",
-    "N/A",
-    "123-456-7890",
-    "1 Main St",
-    "Dr. Doctor",
-    "Insurance Co.",
-    "N/A",
-    1
+    log_id INT,
+    appt_date DATE,
+    time_of_day TIME, # 24 hr clock
+    reading_number SMALLINT(3), # 3 digits max [-999, 999]
+    SBP VARCHAR(15),
+    DBP VARCHAR(15),
+    pulse VARCHAR(15),
+    patient_status VARCHAR(100)
 );
 
-SELECT * FROM attributes;
+SELECT * from bp_logs;
