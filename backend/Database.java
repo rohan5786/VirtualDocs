@@ -40,8 +40,7 @@ public class Database {
 
         sql.executeUpdate();
     }
-
-    // make this also delete their 
+    
     public void removePatient(int patient_id) throws SQLException {
         final String query = "DELETE FROM attributes WHERE patient_id = ?;";
         PreparedStatement sql = database_connection.prepareStatement(query);
@@ -129,6 +128,14 @@ public class Database {
         sql.setString(7, bp.DBP);
         sql.setString(8, bp.pulse);
         sql.setString(9, bp.patient_status);
+
+        sql.executeUpdate();
+    }
+
+    public void removeBPLogs(int patient_id) throws SQLException {
+        final String query = "DELETE FROM bp_logs WHERE patient_id = ?;";
+        PreparedStatement sql = database_connection.prepareStatement(query);
+        sql.setInt(1, patient_id);
 
         sql.executeUpdate();
     }
