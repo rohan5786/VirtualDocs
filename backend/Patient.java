@@ -4,6 +4,8 @@ public class Patient {
     public int patient_id, sex; // 1 = male, 0 = female
     public boolean hipaa_agreement;
 
+    private BPLog bp;
+
     public Patient(
         String full_name,
         int patient_id,
@@ -30,6 +32,10 @@ public class Patient {
         this.insurance = insurance;
         this.documents = documents;
         this.hipaa_agreement = hipaa_agreement;
+    }
+
+    public void setBP(BPLog bp) {
+        this.bp = bp;
     }
 
     public String toString() {

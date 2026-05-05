@@ -41,6 +41,7 @@ public class Database {
         sql.executeUpdate();
     }
 
+    // make this also delete their 
     public void removePatient(int patient_id) throws SQLException {
         final String query = "DELETE FROM attributes WHERE patient_id = ?;";
         PreparedStatement sql = database_connection.prepareStatement(query);
@@ -114,12 +115,25 @@ public class Database {
     }
 
 
-    // for getting bp logs data --- only related to id & name btw, doesn't store all attributes too
-    
+    // for getting bp logs data --- only shares id & name btw
+    public void addBPLogs(BPLog bp) throws SQLException{
+        final String query = "INSERT INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        PreparedStatement sql = database_connection.prepareStatement(query);
 
+        sql.setInt(1, bp.patient_id); // indexing starts at 1 for jdbc
+        sql.setInt(2, bp.log_id);
+        sql.setString(3, bp.appt_date);
+        sql.setString(4, bp.time_of_day);
+        sql.setInt(5, bp.reading_number);
+        sql.setString(6, bp.SBP);
+        sql.setString(7, bp.DBP);
+        sql.setString(8, bp.pulse);
+        sql.setString(9, bp.patient_status);
+
+        sql.executeUpdate();
+    }
 
     // for raidology reports only
-
 
     // prints all users by some query's rules
     public void onQuery(String sqlQuery) throws SQLException {
