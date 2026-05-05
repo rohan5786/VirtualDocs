@@ -1,6 +1,10 @@
-import java.sql.*;
+import java.sql.SQLException;
 
-// import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet; 
+import java.util.ArrayList;
 
 public class Database {
     private static Connection database_connection;
@@ -15,8 +19,9 @@ public class Database {
         database_connection = DriverManager.getConnection(url, user, pwd);
     }
 
+    // for attributes only
+
     public void addPatient(Patient p) throws SQLException {
-        // create query
         final String query = "INSERT INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = database_connection.prepareStatement(query);
 
@@ -37,40 +42,111 @@ public class Database {
     }
 
     public void removePatient(int patient_id) throws SQLException {
-        final String query = "DELETE FROM attributes WHERE patient_id = ?";
+        final String query = "DELETE FROM attributes WHERE patient_id = ?;";
         PreparedStatement sql = database_connection.prepareStatement(query);
         sql.setInt(1, patient_id);
 
         sql.executeUpdate();
     }
 
-    public Patient findPatientID(int ID) {
+    // next 2 methods return all patients of this parameter
+    public ArrayList<Patient> findPatientID(int ID) throws SQLException {
         // send query
-        return new Patient();
+        final String query = "SELECT * FROM attributes WHERE patient_id = ?;";
+        PreparedStatement sql = database_connection.prepareStatement(query);
+        sql.setInt(1, ID);
+
+        ResultSet rs = sql.executeQuery();
+        ArrayList<Patient> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(
+                new Patient(
+                    rs.getString("full_name"),
+                    rs.getInt("patient_id"),
+                    rs.getString("date_of_birth"),
+                    rs.getInt("sex"),
+                    rs.getString("allergies"),
+                    rs.getString("existing_medications"),
+                    rs.getString("phone_number"),
+                    rs.getString("address"),
+                    rs.getString("primary_provider"),
+                    rs.getString("insurance"),
+                    rs.getString("documents"),
+                    rs.getInt("hipaa_agreement") == 1
+                )
+            );
+        }
+        return list;
     }
 
-    public Patient findPatientName(String name) {
-        // send query
-        return new Patient();
+    public ArrayList<Patient> findPatientName(String name) throws SQLException {
+        final String query = "SELECT * FROM attributes WHERE full_name = ?;";
+        PreparedStatement sql = database_connection.prepareStatement(query);
+        sql.setString(1, name);
+
+        ResultSet rs = sql.executeQuery();
+        ArrayList<Patient> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(
+                new Patient(
+                    rs.getString("full_name"),
+                    rs.getInt("patient_id"),
+                    rs.getString("date_of_birth"),
+                    rs.getInt("sex"),
+                    rs.getString("allergies"),
+                    rs.getString("existing_medications"),
+                    rs.getString("phone_number"),
+                    rs.getString("address"),
+                    rs.getString("primary_provider"),
+                    rs.getString("insurance"),
+                    rs.getString("documents"),
+                    rs.getInt("hipaa_agreement") == 1
+                )
+            );
+        }
+        return list;
     }
 
-    public boolean patientExists(int ID) {
-        return true;
+    public boolean patientExists(int ID) throws SQLException {
+        return findPatientID(ID).size() > 0;
     }
+
+
+    // for getting bp logs data --- only related to id & name btw, doesn't store all attributes too
+    
+
+
+    // for raidology reports only
+
 
     // prints all users by some query's rules
     public void onQuery(String sqlQuery) throws SQLException {
         PreparedStatement sql = database_connection.prepareStatement(sqlQuery);
+        ResultSet rs = sql.executeQuery();
+        printPatientSet(rs);
+    }
 
-        ResultSet res = sql.executeQuery();
-
-        while (res.next()) {
-            final String fn = res.getString("full_name");
-            final int id = res.getInt("patient_id");
-            final String dob = res.getString("date_of_birth");
-            final String sex = res.getInt("sex") == 1 ? "Male" : "Female";
-
-            System.out.println(fn + " | " + id + " | " + dob + " | " + sex);
+    private void printPatientSet(ResultSet rs) throws SQLException {
+        while (rs.next()) {
+            System.out.println(
+                new Patient(
+                    rs.getString("full_name"),
+                    rs.getInt("patient_id"),
+                    rs.getString("date_of_birth"),
+                    rs.getInt("sex"),
+                    rs.getString("allergies"),
+                    rs.getString("existing_medications"),
+                    rs.getString("phone_number"),
+                    rs.getString("address"),
+                    rs.getString("primary_provider"),
+                    rs.getString("insurance"),
+                    rs.getString("documents"),
+                    rs.getInt("hipaa_agreement") == 1
+                )
+            );
         }
     }
+
 }
