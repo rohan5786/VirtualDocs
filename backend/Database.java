@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class Database {
-    private static Connection database_connection;
+    private static Connection db_connection;
     final String url = "jdbc:mysql://localhost:3306/patient_database";
     final String user = Utils.db_user;
     final String pwd = Utils.db_pwd;
@@ -16,7 +16,7 @@ public class Database {
     }
 
     public void config() throws SQLException {
-        database_connection = DriverManager.getConnection(url, user, pwd);
+        db_connection = DriverManager.getConnection(url, user, pwd);
     }
 
     public boolean patientExists(int ID) throws SQLException {
@@ -27,7 +27,7 @@ public class Database {
 
     public void addPatient(Patient p) throws SQLException {
         final String query = "INSERT INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        PreparedStatement sql = database_connection.prepareStatement(query);
+        PreparedStatement sql = db_connection.prepareStatement(query);
 
         sql.setString(1, p.full_name); // indexing starts at 1 for jdbc
         sql.setInt(2, p.patient_id);
@@ -43,21 +43,23 @@ public class Database {
         sql.setInt(12, p.hipaa_agreement ? 1 : 0);
 
         sql.executeUpdate();
+        sql.close();
     }
     
     public void removePatient(int patient_id) throws SQLException {
         final String query = "DELETE FROM attributes WHERE patient_id = ?;";
-        PreparedStatement sql = database_connection.prepareStatement(query);
+        PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, patient_id);
 
         sql.executeUpdate();
+        sql.close();
     }
 
     // next 2 methods return all patients of this parameter
     public ArrayList<Patient> findPatientID(int ID) throws SQLException {
         // send query
         final String query = "SELECT * FROM attributes WHERE patient_id = ?;";
-        PreparedStatement sql = database_connection.prepareStatement(query);
+        PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
 
         ResultSet rs = sql.executeQuery();
@@ -81,12 +83,17 @@ public class Database {
                 )
             );
         }
+
+        rs.close();
+        sql.close();
+        // db_connection.close();
+
         return list;
     }
 
     public ArrayList<Patient> findPatientName(String name) throws SQLException {
         final String query = "SELECT * FROM attributes WHERE full_name = ?;";
-        PreparedStatement sql = database_connection.prepareStatement(query);
+        PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setString(1, name);
 
         ResultSet rs = sql.executeQuery();
@@ -110,6 +117,11 @@ public class Database {
                 )
             );
         }
+
+        rs.close();
+        sql.close();
+        // db_connection.close();
+
         return list;
     }
 
@@ -117,7 +129,7 @@ public class Database {
 
     public void addBPLogs(BPLog bp) throws SQLException{
         final String query = "INSERT INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        PreparedStatement sql = database_connection.prepareStatement(query);
+        PreparedStatement sql = db_connection.prepareStatement(query);
 
         sql.setInt(1, bp.patient_id); // indexing starts at 1 for jdbc
         sql.setInt(2, bp.log_id);
@@ -130,19 +142,21 @@ public class Database {
         sql.setString(9, bp.patient_status);
 
         sql.executeUpdate();
+        sql.close();
     }
 
     public void removeBPLogs(int patient_id) throws SQLException {
         final String query = "DELETE FROM bp_logs WHERE patient_id = ?;";
-        PreparedStatement sql = database_connection.prepareStatement(query);
+        PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, patient_id);
 
         sql.executeUpdate();
+        sql.close();
     }
 
     public ArrayList<BPLog> findBPID(int ID) throws SQLException {
         final String query = "SELECT * FROM bp_logs WHERE patient_id = ?;";
-        PreparedStatement sql = database_connection.prepareStatement(query);
+        PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
 
         ResultSet rs = sql.executeQuery();
@@ -163,6 +177,11 @@ public class Database {
                 )
             );
         }
+
+        rs.close();
+        sql.close();
+        // db_connection.close();
+
         return list;
     }
 
@@ -170,7 +189,7 @@ public class Database {
 
     public void addRadiologyLog(RadiologyLog rl) throws SQLException {
         final String query = "INSERT INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?);";
-        PreparedStatement sql = database_connection.prepareStatement(query);
+        PreparedStatement sql = db_connection.prepareStatement(query);
         
         sql.setInt(1, rl.patient_id);
         sql.setInt(2, rl.log_id);
@@ -181,19 +200,21 @@ public class Database {
         sql.setString(7, rl.patient_status);
 
         sql.executeUpdate();
+        sql.close();
     }
 
     public void removeRadiologyLog(int ID) throws SQLException {
         final String query = "DELETE FROM radiology_logs WHERE patient_id = ?;";
-        PreparedStatement sql = database_connection.prepareStatement(query);
+        PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
 
         sql.executeUpdate();
+        sql.close();
     }
 
     public ArrayList<RadiologyLog> findRadiologyID(int ID) throws SQLException {
         final String query = "SELECT * FROM radiology_logs WHERE patient_id = ?;";
-        PreparedStatement sql = database_connection.prepareStatement(query);
+        PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
 
         ResultSet rs = sql.executeQuery();
@@ -211,15 +232,22 @@ public class Database {
                 )
             );
         }
+
+        rs.close();
+        sql.close();
+        // db_connection.close();
         
         return list;
     }
 
     // prints all users by some query's rules
     public void onResultQuery(String sqlQuery) throws SQLException {
-        PreparedStatement sql = database_connection.prepareStatement(sqlQuery);
+        PreparedStatement sql = db_connection.prepareStatement(sqlQuery);
         ResultSet rs = sql.executeQuery();
         printPatientSet(rs);
+
+        rs.close();
+        sql.close();
     }
 
     private void printPatientSet(ResultSet rs) throws SQLException {
@@ -242,5 +270,4 @@ public class Database {
             );
         }
     }
-
 }
