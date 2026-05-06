@@ -23,7 +23,7 @@ public class Database {
         return findPatientID(ID).size() > 0;
     }
 
-    // for attributes only
+    // for patient attributes only
 
     public void addPatient(Patient p) throws SQLException {
         final String query = "INSERT INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -113,7 +113,8 @@ public class Database {
         return list;
     }
 
-    // for getting bp logs data --- only shares id & name btw
+    // for bp logs only
+
     public void addBPLogs(BPLog bp) throws SQLException{
         final String query = "INSERT INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = database_connection.prepareStatement(query);
@@ -139,7 +140,7 @@ public class Database {
         sql.executeUpdate();
     }
 
-    public ArrayList<BPLog> findBPid(int ID) throws SQLException {
+    public ArrayList<BPLog> findBPID(int ID) throws SQLException {
         final String query = "SELECT * FROM bp_logs WHERE patient_id = ?;";
         PreparedStatement sql = database_connection.prepareStatement(query);
         sql.setInt(1, ID);
@@ -152,9 +153,9 @@ public class Database {
                 new BPLog(
                     rs.getInt(1),
                     rs.getInt(2),
-                    rs.getInt(3),
+                    rs.getString(3),
                     rs.getString(4),
-                    rs.getString(5),
+                    rs.getInt(5),
                     rs.getString(6),
                     rs.getString(7),
                     rs.getString(8),
@@ -165,10 +166,57 @@ public class Database {
         return list;
     }
 
-    // for raidology reports only
+    // for raidology logs only
+
+    public void addRadiologyLog(RadiologyLog rl) throws SQLException {
+        final String query = "INSERT INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?);";
+        PreparedStatement sql = database_connection.prepareStatement(query);
+        
+        sql.setInt(1, rl.patient_id);
+        sql.setInt(2, rl.log_id);
+        sql.setString(3, rl.appt_date);
+        sql.setString(4, rl.imaging_type);
+        sql.setString(5, rl.body_part);
+        sql.setString(6, rl.findings);
+        sql.setString(7, rl.patient_status);
+
+        sql.executeUpdate();
+    }
+
+    public void removeRadiologyLog(int ID) throws SQLException {
+        final String query = "DELETE FROM radiology_logs WHERE patient_id = ?;";
+        PreparedStatement sql = database_connection.prepareStatement(query);
+        sql.setInt(1, ID);
+
+        sql.executeUpdate();
+    }
+
+    public ArrayList<RadiologyLog> findRadiologyID(int ID) throws SQLException {
+        final String query = "SELECT * FROM radiology_logs WHERE patient_id = ?;";
+        PreparedStatement sql = database_connection.prepareStatement(query);
+        sql.setInt(1, ID);
+
+        ResultSet rs = sql.executeQuery();
+        ArrayList<RadiologyLog> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(
+                new RadiologyLog(
+                    rs.getInt(1),
+                    rs.getInt(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7)
+                )
+            );
+        }
+        
+        return list;
+    }
 
     // prints all users by some query's rules
-    public void onQuery(String sqlQuery) throws SQLException {
+    public void onResultQuery(String sqlQuery) throws SQLException {
         PreparedStatement sql = database_connection.prepareStatement(sqlQuery);
         ResultSet rs = sql.executeQuery();
         printPatientSet(rs);

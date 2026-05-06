@@ -5,9 +5,9 @@ public class BPLog {
     public BPLog(
         int patient_id,
         int log_id,
-        int reading_number,
         String appt_date,
         String time_of_day,
+        int reading_number,
         String SBP,
         String DBP,
         String pulse,
