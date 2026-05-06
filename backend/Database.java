@@ -19,6 +19,10 @@ public class Database {
         database_connection = DriverManager.getConnection(url, user, pwd);
     }
 
+    public boolean patientExists(int ID) throws SQLException {
+        return findPatientID(ID).size() > 0;
+    }
+
     // for attributes only
 
     public void addPatient(Patient p) throws SQLException {
@@ -109,11 +113,6 @@ public class Database {
         return list;
     }
 
-    public boolean patientExists(int ID) throws SQLException {
-        return findPatientID(ID).size() > 0;
-    }
-
-
     // for getting bp logs data --- only shares id & name btw
     public void addBPLogs(BPLog bp) throws SQLException{
         final String query = "INSERT INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -138,6 +137,32 @@ public class Database {
         sql.setInt(1, patient_id);
 
         sql.executeUpdate();
+    }
+
+    public ArrayList<BPLog> findBPid(int ID) throws SQLException {
+        final String query = "SELECT * FROM bp_logs WHERE patient_id = ?;";
+        PreparedStatement sql = database_connection.prepareStatement(query);
+        sql.setInt(1, ID);
+
+        ResultSet rs = sql.executeQuery();
+        ArrayList<BPLog> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(
+                new BPLog(
+                    rs.getInt(1),
+                    rs.getInt(2),
+                    rs.getInt(3),
+                    rs.getString(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7),
+                    rs.getString(8),
+                    rs.getString(9)
+                )
+            );
+        }
+        return list;
     }
 
     // for raidology reports only

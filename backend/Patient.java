@@ -4,7 +4,8 @@ public class Patient {
     public int patient_id, sex; // 1 = male, 0 = female
     public boolean hipaa_agreement;
 
-    private BPLog bp;
+    private BPLog bpLog;
+    private RadiologyLog radiologyLog;
 
     public Patient(
         String full_name,
@@ -35,7 +36,11 @@ public class Patient {
     }
 
     public void setBP(BPLog bp) {
-        this.bp = bp;
+        this.bpLog = bp;
+    }
+
+    public void setRadiology(RadiologyLog rl) {
+        radiologyLog = rl;
     }
 
     public String toString() {

@@ -25,8 +25,7 @@ public class BPLog {
     }
 
     public String toString() {
-        final String bp_string = 
-            patient_id + " | " + 
+        final String bp_string = patient_id + " | " + 
             log_id + " | " + 
             reading_number + " | " + 
             appt_date + " | " + 
