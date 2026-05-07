@@ -1,3 +1,5 @@
+package com.example;
+
 public class RadiologyLog {
     public int patient_id, log_id;
     public String appt_date, imaging_type, body_part, findings, patient_status;

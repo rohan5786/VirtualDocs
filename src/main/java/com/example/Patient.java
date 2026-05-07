@@ -1,3 +1,5 @@
+package com.example;
+
 public class Patient {
     public String full_name, date_of_birth, allergies, existing_medications, phone_number, address,
             primary_provider, insurance, documents;
