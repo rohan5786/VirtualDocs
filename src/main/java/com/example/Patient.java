@@ -1,10 +1,13 @@
+package com.example;
+
 public class Patient {
     public String full_name, date_of_birth, allergies, existing_medications, phone_number, address,
             primary_provider, insurance, documents;
     public int patient_id, sex; // 1 = male, 0 = female
     public boolean hipaa_agreement;
 
-    public Patient() {}
+    private BPLog bpLog;
+    private RadiologyLog radiologyLog;
 
     public Patient(
         String full_name,
@@ -32,6 +35,31 @@ public class Patient {
         this.insurance = insurance;
         this.documents = documents;
         this.hipaa_agreement = hipaa_agreement;
+    }
+
+    public void setBP(BPLog bp) {
+        this.bpLog = bp;
+    }
+
+    public void setRadiology(RadiologyLog rl) {
+        radiologyLog = rl;
+    }
+
+    public String toString() {
+        final String patient_string =  
+            full_name + " | " +
+            patient_id + " | " +
+            date_of_birth + " | " +
+            (sex == 1 ? "male" : "female") + " | " +
+            allergies + " | " +
+            existing_medications + " | " +
+            phone_number + " | " +
+            address + " | " +
+            primary_provider + " | " +
+            insurance + " | " +
+            documents + " | " +
+            hipaa_agreement;
+        return patient_string;
     }
 
 }
