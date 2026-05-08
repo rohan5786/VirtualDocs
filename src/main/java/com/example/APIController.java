@@ -10,14 +10,15 @@ public class APIController {
 
     // for getting patients by id
     @GetMapping("/patients/{id}")
-    public String getPatientID(@PathVariable int ID) throws SQLException {
+    public String getPatientID(@PathVariable int id) throws SQLException {
         db.config();
-        return db.findPatientID(ID).get(0).toString();
+        return db.findPatientID(id).isEmpty() ? "No such patient" : db.findPatientID(id).get(0).toString();
     }
 
-    @GetMapping("/googoogaagaa")
-    public String googoogaagaa() {
-        return "Googoogaagaa";
+    @GetMapping("/patients/{id}/radiology_logs")
+    public String getPatientRadiologyID(@PathVariable int id) throws SQLException {
+        db.config();
+        return db.findRadiologyID(id).isEmpty() ? "No logs" : db.findRadiologyID(id).get(0).toString();
     }
 
 }
