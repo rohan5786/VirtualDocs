@@ -5,7 +5,7 @@ import java.sql.*;
 public class Database {
     private static Connection database_connection;
     final String url = "jdbc:mysql://localhost:3306/patient_database";
-    final String user = Utils.db_user;
+    final String user = Utils.db_user; //Utils is like an env file for the credentials.
     final String pwd = Utils.db_pwd;
 
     public Database() {
