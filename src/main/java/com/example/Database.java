@@ -42,6 +42,7 @@ public class Database {
         sql.setString(10, p.insurance);
         sql.setString(11, p.documents);
         sql.setInt(12, p.hipaa_agreement ? 1 : 0);
+        sql.setString(13, p.doctor_notes);
 
         sql.executeUpdate();
         sql.close();
@@ -69,18 +70,19 @@ public class Database {
         while (rs.next()) {
             list.add(
                 new Patient(
-                    rs.getString("full_name"),
-                    rs.getInt("patient_id"),
-                    rs.getString("date_of_birth"),
-                    rs.getInt("sex"),
-                    rs.getString("allergies"),
-                    rs.getString("existing_medications"),
-                    rs.getString("phone_number"),
-                    rs.getString("address"),
-                    rs.getString("primary_provider"),
-                    rs.getString("insurance"),
-                    rs.getString("documents"),
-                    rs.getInt("hipaa_agreement") == 1
+                    rs.getString(1),
+                    rs.getInt(2),
+                    rs.getString(3),
+                    rs.getInt(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7),
+                    rs.getString(8),
+                    rs.getString(9),
+                    rs.getString(10),
+                    rs.getString(11),
+                    rs.getInt(12) == 1,
+                    rs.getString(13)
                 )
             );
         }
@@ -103,18 +105,19 @@ public class Database {
         while (rs.next()) {
             list.add(
                 new Patient(
-                    rs.getString("full_name"),
-                    rs.getInt("patient_id"),
-                    rs.getString("date_of_birth"),
-                    rs.getInt("sex"),
-                    rs.getString("allergies"),
-                    rs.getString("existing_medications"),
-                    rs.getString("phone_number"),
-                    rs.getString("address"),
-                    rs.getString("primary_provider"),
-                    rs.getString("insurance"),
-                    rs.getString("documents"),
-                    rs.getInt("hipaa_agreement") == 1
+                    rs.getString(1),
+                    rs.getInt(2),
+                    rs.getString(3),
+                    rs.getInt(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7),
+                    rs.getString(8),
+                    rs.getString(9),
+                    rs.getString(10),
+                    rs.getString(11),
+                    rs.getInt(12) == 1,
+                    rs.getString(13)
                 )
             );
         }
@@ -255,18 +258,19 @@ public class Database {
         while (rs.next()) {
             System.out.println(
                 new Patient(
-                    rs.getString("full_name"),
-                    rs.getInt("patient_id"),
-                    rs.getString("date_of_birth"),
-                    rs.getInt("sex"),
-                    rs.getString("allergies"),
-                    rs.getString("existing_medications"),
-                    rs.getString("phone_number"),
-                    rs.getString("address"),
-                    rs.getString("primary_provider"),
-                    rs.getString("insurance"),
-                    rs.getString("documents"),
-                    rs.getInt("hipaa_agreement") == 1
+                    rs.getString(1),
+                    rs.getInt(2),
+                    rs.getString(3),
+                    rs.getInt(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7),
+                    rs.getString(8),
+                    rs.getString(9),
+                    rs.getString(10),
+                    rs.getString(11),
+                    rs.getInt(12) == 1,
+                    rs.getString(13)
                 )
             );
         }

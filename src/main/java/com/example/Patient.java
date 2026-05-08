@@ -1,13 +1,15 @@
 package com.example;
 
+import java.util.ArrayList;
+
 public class Patient {
     public String full_name, date_of_birth, allergies, existing_medications, phone_number, address,
-            primary_provider, insurance, documents;
+            primary_provider, insurance, documents, doctor_notes;
     public int patient_id, sex; // 1 = male, 0 = female
     public boolean hipaa_agreement;
 
-    private BPLog bpLog;
-    private RadiologyLog radiologyLog;
+    private ArrayList<BPLog> bpLogs;
+    private ArrayList<RadiologyLog> radiologyLogs;
 
     public Patient(
         String full_name,
@@ -21,7 +23,8 @@ public class Patient {
         String primary_provider,
         String insurance,
         String documents,
-        boolean hipaa_agreement
+        boolean hipaa_agreement,
+        String doctor_notes
     ) {
         this.full_name = full_name;
         this.patient_id = patient_id;
@@ -35,14 +38,15 @@ public class Patient {
         this.insurance = insurance;
         this.documents = documents;
         this.hipaa_agreement = hipaa_agreement;
+        this.doctor_notes = doctor_notes;
     }
 
-    public void setBP(BPLog bp) {
-        this.bpLog = bp;
+    public void addBP(BPLog bp) {
+        bpLogs.add(bp);
     }
 
-    public void setRadiology(RadiologyLog rl) {
-        radiologyLog = rl;
+    public void addRadiology(RadiologyLog rl) {
+        radiologyLogs.add(rl);
     }
 
     public String toString() {
