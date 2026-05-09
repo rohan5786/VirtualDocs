@@ -10,6 +10,12 @@ import java.sql.*;
 public class APIController {
     private final static Database db = new Database();
 
+    @GetMapping("/patients")
+    public String getPatients() throws SQLException {
+        db.config();
+        return db.allPatients();
+    }
+
     // for getting patients by id
     @GetMapping("/patients/{id}")
     public String getPatientID(@PathVariable int id) throws SQLException {

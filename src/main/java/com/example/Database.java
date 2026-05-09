@@ -275,4 +275,34 @@ public class Database {
             );
         }
     }
+
+    public String allPatients() throws SQLException {
+        final String query = "SELECT * FROM attributes";
+        PreparedStatement sql = db_connection.prepareStatement(query);
+        ResultSet rs = sql.executeQuery();
+
+        String rsString = "";
+        while (rs.next()) {
+            rsString += new Patient(
+                rs.getString(1),
+                rs.getInt(2),
+                rs.getString(3),
+                rs.getInt(4),
+                rs.getString(5),
+                rs.getString(6),
+                rs.getString(7),
+                rs.getString(8),
+                rs.getString(9),
+                rs.getString(10),
+                rs.getString(11),
+                rs.getInt(12) == 1,
+                rs.getString(13)
+            );
+        }
+
+        rs.close();
+        sql.close();
+
+        return rsString;
+    }
 }
