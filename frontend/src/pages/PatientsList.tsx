@@ -11,7 +11,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { fetchPatients } from "@/lib/api";
 import { calcAge } from "@/data/patients";
-import { getDocumentsByPatient } from "@/data/documents";
+// import { getDocumentsByPatient } from "@/data/documents";
 import { formatDate } from "@/lib/format";
 
 export default function PatientsList() {
@@ -94,7 +94,7 @@ export default function PatientsList() {
           </TableHeader>
           <TableBody>
             {filtered.map((p) => {
-              const lastDoc = getDocumentsByPatient(p.id)[0];
+              // const lastDoc = getDocumentsByPatient(p.id)[0];
               return (
                 <TableRow
                   key={p.id}
@@ -113,9 +113,9 @@ export default function PatientsList() {
                   <TableCell className="px-3 py-2.5 text-[12px] tabular-nums">{calcAge(p.dob)} · {p.sex}</TableCell>
                   <TableCell className="px-3 py-2.5 text-[12px]">{p.primaryDiagnosis}</TableCell>
                   <TableCell className="px-3 py-2.5 text-[12px] text-muted-foreground">{p.primaryProvider}</TableCell>
-                  <TableCell className="px-3 py-2.5 text-[12px] text-muted-foreground tabular-nums">
+                  {/* <TableCell className="px-3 py-2.5 text-[12px] text-muted-foreground tabular-nums">
                     {lastDoc ? formatDate(lastDoc.date) : "—"}
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               );
             })}

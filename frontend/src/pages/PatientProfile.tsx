@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPatientById } from "@/lib/api";
 import { PatientHeader } from "@/components/patient/PatientHeader";
-import { VitalsCard } from "@/components/patient/VitalsCard";
+// import { VitalsCard } from "@/components/patient/VitalsCard";
 import { DocumentTimeline } from "@/components/patient/DocumentTimeline";
 import { Button } from "@/components/ui/button";
 
@@ -42,11 +42,12 @@ export default function PatientProfile() {
 
       <PatientHeader patient={patient} />
 
-      <div className="grid gap-4 lg:grid-cols-[260px_1fr]">
-        <aside className="lg:sticky lg:top-16 lg:self-start">
+      <div>
+      {/* <div className="grid gap-4 lg:grid-cols-[260px_1fr]"> */}
+        {/* <aside className="lg:sticky lg:top-16 lg:self-start">
           <VitalsCard patient={patient} />
-        </aside>
-        <DocumentTimeline patientId={patient.id} />
+        </aside> */}
+        <DocumentTimeline patientId={patient.patient.id} />
       </div>
     </div>
   );
