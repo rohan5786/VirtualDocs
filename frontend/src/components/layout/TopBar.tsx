@@ -1,15 +1,15 @@
 import { Bell, Search, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UploadDocumentDialog } from "@/components/upload/UploadDocumentDialog";
-import { patients } from "@/data/patients";
+import { fetchPatients } from "@/lib/api";
+import type { Patient } from "@/data/types";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+  Popover, PopoverContent, PopoverTrigger,
 } from "@/components/ui/popover";
 
 export function TopBar() {
@@ -18,9 +18,14 @@ export function TopBar() {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
 
+  const { data: patients = [] } = useQuery({
+    queryKey: ["patients"],
+    queryFn: fetchPatients,
+  });
+
   const results = query
-    ? patients.filter((p) =>
-        `${p.firstName} ${p.lastName} ${p.mrn}`.toLowerCase().includes(query.toLowerCase()),
+    ? patients.filter((p: Patient) =>
+        `${p.full_name}`.toLowerCase().includes(query.toLowerCase()),
       )
     : [];
 
@@ -36,12 +41,9 @@ export function TopBar() {
             <div className="relative">
               <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" strokeWidth={1.75} />
               <Input
-                placeholder="Search patients by name or MRN"
+                placeholder="Search patients by name"
                 value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setOpen(true);
-                }}
+                onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
                 onFocus={() => setOpen(true)}
                 className="h-8 rounded-[6px] border-border bg-secondary/60 pl-8 pr-14 text-[13px] shadow-none focus-visible:bg-card focus-visible:ring-1"
               />
@@ -52,19 +54,19 @@ export function TopBar() {
           </PopoverTrigger>
           <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-1 rounded-[6px]" align="start" onOpenAutoFocus={(e) => e.preventDefault()}>
             <div className="max-h-80 overflow-y-auto">
-              {results.map((p) => (
+              {results.map((p: Patient) => (
                 <button
-                  key={p.id}
+                  key={p.patient_id}
                   onClick={() => {
-                    navigate(`/patients/${p.id}`);
+                    navigate(`/patients/${p.patient_id}`);
                     setQuery("");
                     setOpen(false);
                   }}
                   className="flex w-full items-center justify-between rounded-[4px] px-2.5 py-1.5 text-left text-[13px] hover:bg-accent"
                 >
                   <div>
-                    <div className="font-medium">{p.firstName} {p.lastName}</div>
-                    <div className="text-[11px] text-muted-foreground tabular-nums">{p.mrn} · {p.primaryDiagnosis}</div>
+                    <div className="font-medium">{p.full_name}</div>
+                    <div className="text-[11px] text-muted-foreground tabular-nums">{p.primary_provider}</div>
                   </div>
                   <span className="text-[11px] text-muted-foreground">{p.sex}</span>
                 </button>
