@@ -47,7 +47,7 @@ export default function PatientProfile() {
         {/* <aside className="lg:sticky lg:top-16 lg:self-start">
           <VitalsCard patient={patient} />
         </aside> */}
-        <DocumentTimeline patientId={patient.patient.id} />
+        <DocumentTimeline patientId={patient.patient_id} />
       </div>
     </div>
   );

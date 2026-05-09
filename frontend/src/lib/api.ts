@@ -8,7 +8,7 @@ export async function fetchPatients() {
 }
 
 export async function fetchPatientById(id: string) {
-  const res = await fetch(`${BASE}/patients/${parseInt(id)}`);
+  const res = await fetch(`${BASE}/patients/${id}`);
   if (!res.ok) throw new Error(`Patient not found: ${res.status}`);
   return res.json();
 }
