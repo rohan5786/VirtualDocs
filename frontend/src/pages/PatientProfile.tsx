@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { getPatientById } from "@/data/patients";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPatientById } from "@/lib/api";
 import { PatientHeader } from "@/components/patient/PatientHeader";
 import { VitalsCard } from "@/components/patient/VitalsCard";
 import { DocumentTimeline } from "@/components/patient/DocumentTimeline";
@@ -8,9 +9,15 @@ import { Button } from "@/components/ui/button";
 
 export default function PatientProfile() {
   const { id } = useParams<{ id: string }>();
-  const patient = id ? getPatientById(id) : undefined;
 
-  if (!patient) {
+  const { data: patient, isLoading, error } = useQuery({
+    queryKey: ["patient", id],
+    queryFn: () => fetchPatientById(id!),
+    enabled: !!id,
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error || !patient) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-12 text-center">
         <h1 className="text-[18px] font-semibold">Patient not found</h1>

@@ -3,6 +3,8 @@ package com.example;
 import org.springframework.web.bind.annotation.*;
 import java.sql.*;
 
+// basically saying it's ok for frontend to run on 5173 while backend runs on 8080
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api")
 public class APIController {

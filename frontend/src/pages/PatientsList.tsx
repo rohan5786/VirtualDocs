@@ -3,21 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { patients, calcAge } from "@/data/patients";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPatients } from "@/lib/api";
+import { calcAge } from "@/data/patients";
 import { getDocumentsByPatient } from "@/data/documents";
 import { formatDate } from "@/lib/format";
 
@@ -27,8 +20,13 @@ export default function PatientsList() {
   const [diagnosisFilter, setDiagnosisFilter] = useState<string>("all");
   const [providerFilter, setProviderFilter] = useState<string>("all");
 
-  const diagnoses = Array.from(new Set(patients.map((p) => p.primaryDiagnosis)));
-  const providers = Array.from(new Set(patients.map((p) => p.primaryProvider)));
+  const { data: patients = [], isLoading, error } = useQuery({
+    queryKey: ["patients"],
+    queryFn: fetchPatients,
+  });
+
+  const diagnoses: string[] = Array.from(new Set(patients.map((p) => p.primaryDiagnosis)));
+  const providers: string[] = Array.from(new Set(patients.map((p) => p.primaryProvider)));
 
   const filtered = useMemo(() => {
     return patients.filter((p) => {
@@ -39,7 +37,11 @@ export default function PatientsList() {
       const matchesProv = providerFilter === "all" || p.primaryProvider === providerFilter;
       return matchesQuery && matchesDx && matchesProv;
     });
-  }, [query, diagnosisFilter, providerFilter]);
+  }, [patients, query, diagnosisFilter, providerFilter]);
+
+  // early returns after edge cases
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading patients</div>;
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-6 md:px-8 md:py-8 space-y-5 animate-fade-in">
@@ -52,7 +54,6 @@ export default function PatientsList() {
         </div>
       </div>
 
-      {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[220px] max-w-md">
           <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" strokeWidth={1.75} />
@@ -79,7 +80,6 @@ export default function PatientsList() {
         </Select>
       </div>
 
-      {/* Dense table — medical-admin aesthetic */}
       <div className="overflow-hidden rounded-[8px] border border-border bg-card">
         <Table>
           <TableHeader>
