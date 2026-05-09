@@ -25,13 +25,13 @@ export async function createPatient(patient: object) {
 
 // BP logs
 export async function fetchBpLogs(patientId: string) {
-  const res = await fetch(`${BASE}/patients/${patientId}/bplogs`);
+  const res = await fetch(`${BASE}/patients/${patientId}/bp_logs`);
   if (!res.ok) throw new Error(`Failed to fetch BP logs: ${res.status}`);
   return res.json();
 }
 
 export async function createBpLog(patientId: string, log: object) {
-  const res = await fetch(`${BASE}/patients/${patientId}/bplogs`, {
+  const res = await fetch(`${BASE}/patients/${patientId}/bp_logs`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(log),
@@ -42,13 +42,13 @@ export async function createBpLog(patientId: string, log: object) {
 
 // Radiology logs
 export async function fetchRadiologyReports(patientId: string) {
-  const res = await fetch(`${BASE}/patients/${patientId}/radiology`);
+  const res = await fetch(`${BASE}/patients/${patientId}/radiology_logs`);
   if (!res.ok) throw new Error(`Failed to fetch reports: ${res.status}`);
   return res.json();
 }
 
 export async function createRadiologyReport(patientId: string, report: object) {
-  const res = await fetch(`${BASE}/patients/${patientId}/radiology`, {
+  const res = await fetch(`${BASE}/patients/${patientId}/radiology_logs`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(report),

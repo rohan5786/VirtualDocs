@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet; 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Database {
     private static Connection db_connection;
@@ -276,14 +278,14 @@ public class Database {
         }
     }
 
-    public String allPatients() throws SQLException {
+    public List<Patient> allPatients() throws SQLException {
         final String query = "SELECT * FROM attributes";
         PreparedStatement sql = db_connection.prepareStatement(query);
         ResultSet rs = sql.executeQuery();
 
-        String rsString = "";
+        List<Patient> list = new LinkedList<>();
         while (rs.next()) {
-            rsString += new Patient(
+            list.add(new Patient(
                 rs.getString(1),
                 rs.getInt(2),
                 rs.getString(3),
@@ -297,12 +299,12 @@ public class Database {
                 rs.getString(11),
                 rs.getInt(12) == 1,
                 rs.getString(13)
-            );
+            ));
         }
 
         rs.close();
         sql.close();
 
-        return rsString;
+        return list;
     }
 }
