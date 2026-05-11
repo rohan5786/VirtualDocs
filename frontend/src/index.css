@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Nephra Design System — restrained clinical aesthetic.
+   Warm off-white backgrounds, slate foregrounds, muted navy accents.
+   Sharper corners, thinner borders, subtle surface hierarchy. */
+
+@layer base {
+  :root {
+    /* Surfaces — warm off-white paper, not cold SaaS white */
+    --background: 40 18% 98%;
+    --foreground: 215 25% 18%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 18%;
+
+    /* Primary — muted navy, not bright blue */
+    --primary: 215 45% 28%;
+    --primary-foreground: 40 18% 98%;
+    --primary-soft: 212 38% 94%;
+    --primary-muted: 212 28% 88%;
+
+    /* Neutrals */
+    --secondary: 40 14% 95%;
+    --secondary-foreground: 215 25% 22%;
+
+    --muted: 40 12% 94%;
+    --muted-foreground: 215 14% 42%;
+
+    --accent: 210 25% 93%;
+    --accent-foreground: 215 35% 25%;
+
+    /* Semantic — desaturated */
+    --destructive: 0 55% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 155 35% 35%;
+    --success-foreground: 0 0% 100%;
+    --success-soft: 155 25% 93%;
+
+    --warning: 32 60% 42%;
+    --warning-foreground: 0 0% 100%;
+    --warning-soft: 32 50% 94%;
+
+    /* Hairlines */
+    --border: 30 10% 88%;
+    --input: 30 10% 86%;
+    --ring: 215 45% 35%;
+
+    /* Tighter radius for a less bubbly feel */
+    --radius: 0.5rem;
+
+    --shadow-sm: 0 1px 0 0 hsl(215 25% 18% / 0.04);
+    --shadow-card: 0 1px 2px 0 hsl(215 25% 18% / 0.04);
+    --shadow-elevated: 0 2px 8px -2px hsl(215 25% 18% / 0.08), 0 1px 3px -1px hsl(215 25% 18% / 0.04);
+
+    /* Sidebar — same paper tone, slightly cooler */
+    --sidebar-background: 40 14% 96%;
+    --sidebar-foreground: 215 20% 30%;
+    --sidebar-primary: 215 45% 28%;
+    --sidebar-primary-foreground: 40 18% 98%;
+    --sidebar-accent: 212 25% 90%;
+    --sidebar-accent-foreground: 215 45% 22%;
+    --sidebar-border: 30 10% 88%;
+    --sidebar-ring: 215 45% 35%;
+  }
+
+  .dark {
+    --background: 215 28% 10%;
+    --foreground: 40 15% 92%;
+    --card: 215 25% 13%;
+    --card-foreground: 40 15% 92%;
+    --popover: 215 25% 13%;
+    --popover-foreground: 40 15% 92%;
+    --primary: 212 40% 70%;
+    --primary-foreground: 215 30% 12%;
+    --primary-soft: 215 30% 18%;
+    --primary-muted: 215 25% 22%;
+    --secondary: 215 22% 16%;
+    --secondary-foreground: 40 15% 92%;
+    --muted: 215 22% 16%;
+    --muted-foreground: 215 15% 62%;
+    --accent: 215 25% 20%;
+    --accent-foreground: 40 15% 92%;
+    --destructive: 0 55% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 155 30% 55%;
+    --success-foreground: 215 30% 12%;
+    --success-soft: 155 25% 18%;
+    --warning: 32 55% 58%;
+    --warning-foreground: 215 30% 12%;
+    --warning-soft: 32 30% 18%;
+    --border: 215 20% 20%;
+    --input: 215 20% 20%;
+    --ring: 212 40% 70%;
+    --sidebar-background: 215 28% 9%;
+    --sidebar-foreground: 40 12% 80%;
+    --sidebar-primary: 212 40% 70%;
+    --sidebar-primary-foreground: 215 30% 12%;
+    --sidebar-accent: 215 25% 16%;
+    --sidebar-accent-foreground: 40 15% 92%;
+    --sidebar-border: 215 20% 18%;
+    --sidebar-ring: 212 40% 70%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01", "tnum";
+  }
+
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
