@@ -1,3 +1,5 @@
+USE patient_database;
+
 CREATE TABLE IF NOT EXISTS bp_logs(
     patient_id INT,
     log_id INT,
@@ -10,4 +12,12 @@ CREATE TABLE IF NOT EXISTS bp_logs(
     patient_status VARCHAR(100)
 );
 
-SELECT * from bp_logs;
+CREATE TABLE IF NOT EXISTS radiology_logs(
+	patient_id INT,
+    log_id INT,
+    appt_date DATE,
+    imaging_type VARCHAR(20),
+    body_part VARCHAR(40),
+    findings VARCHAR(50),
+    patient_status VARCHAR(100)
+);

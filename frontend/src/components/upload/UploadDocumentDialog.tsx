@@ -1,24 +1,17 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Upload, FileText, Image as ImageIcon, FileCode } from "lucide-react";
-import { patients } from "@/data/patients";
+import { fetchPatients } from "@/lib/api";
+import type { Patient } from "@/data/types";
 import { toast } from "sonner";
 
 interface Props {
@@ -28,6 +21,11 @@ interface Props {
 
 export function UploadDocumentDialog({ open, onOpenChange }: Props) {
   const [dragOver, setDragOver] = useState(false);
+
+  const { data: patients = [] } = useQuery({
+    queryKey: ["patients"],
+    queryFn: fetchPatients,
+  });
 
   const handleSubmit = () => {
     onOpenChange(false);
@@ -48,15 +46,9 @@ export function UploadDocumentDialog({ open, onOpenChange }: Props) {
 
         <div className="space-y-4">
           <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragOver(true);
-            }}
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setDragOver(false);
-            }}
+            onDrop={(e) => { e.preventDefault(); setDragOver(false); }}
             className={`flex flex-col items-center justify-center rounded-[8px] border border-dashed p-7 text-center transition-colors ${
               dragOver ? "border-primary bg-primary-soft" : "border-border bg-secondary/50"
             }`}
@@ -85,9 +77,9 @@ export function UploadDocumentDialog({ open, onOpenChange }: Props) {
                   <SelectValue placeholder="Select patient" />
                 </SelectTrigger>
                 <SelectContent>
-                  {patients.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>
-                      {p.firstName} {p.lastName} · {p.mrn}
+                  {patients.map((p: Patient) => (
+                    <SelectItem key={p.patient_id} value={String(p.patient_id)}>
+                      {p.full_name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -101,10 +93,7 @@ export function UploadDocumentDialog({ open, onOpenChange }: Props) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="bp">BP Log</SelectItem>
-                  <SelectItem value="lab">Outside Lab</SelectItem>
                   <SelectItem value="imaging">Radiology Report</SelectItem>
-                  <SelectItem value="note">Provider Note</SelectItem>
-                  <SelectItem value="referral">Referral Note</SelectItem>
                 </SelectContent>
               </Select>
             </div>

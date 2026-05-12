@@ -1,27 +1,49 @@
 import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { TimelineItem } from "./TimelineItem";
 import { DocumentDrawer } from "./DocumentDrawer";
-import { getDocumentsByPatient } from "@/data/documents";
-import type { ClinicalDocument, DocumentCategory } from "@/data/types";
+import { fetchBpLogs, fetchRadiologyReports } from "@/lib/api";
+import type { BPLog, RadiologyReport } from "@/data/types";
 import { cn } from "@/lib/utils";
 
-const filters: { id: "all" | DocumentCategory; label: string }[] = [
+type Doc = { kind: "bp"; data: BPLog } | { kind: "radiology"; data: RadiologyReport };
+type Filter = "all" | "bp" | "radiology";
+
+const filters: { id: Filter; label: string }[] = [
   { id: "all", label: "All" },
   { id: "bp", label: "BP Logs" },
-  { id: "lab", label: "Labs" },
-  { id: "imaging", label: "Imaging" },
-  { id: "note", label: "Notes" },
-  { id: "referral", label: "Referrals" },
+  { id: "radiology", label: "Radiology" },
 ];
 
-export function DocumentTimeline({ patientId }: { patientId: string }) {
-  const [activeFilter, setActiveFilter] = useState<"all" | DocumentCategory>("all");
-  const [selected, setSelected] = useState<ClinicalDocument | null>(null);
+export function DocumentTimeline({ patientId }: { patientId: number }) {
+  const [activeFilter, setActiveFilter] = useState<Filter>("all");
+  const [selected, setSelected] = useState<Doc | null>(null);
 
-  const allDocs = useMemo(() => getDocumentsByPatient(patientId), [patientId]);
-  const docs = useMemo(
-    () => (activeFilter === "all" ? allDocs : allDocs.filter((d) => d.category === activeFilter)),
-    [allDocs, activeFilter],
+  const { data: bpLogs = [] } = useQuery({
+    queryKey: ["bplogs", patientId],
+    queryFn: () => fetchBpLogs(patientId + ""),
+  });
+
+  const { data: radiologyReports = [] } = useQuery({
+    queryKey: ["radiology", patientId],
+    queryFn: () => fetchRadiologyReports(patientId + ""),
+  });
+
+  const allDocs: Doc[] = useMemo(() => [
+    ...bpLogs.map((d: BPLog) => ({ kind: "bp" as const, data: d })),
+    ...radiologyReports.map((d: RadiologyReport) => ({ kind: "radiology" as const, data: d })),
+  ].sort((a, b) => {
+    const dateA = a.data.appt_date;
+    const dateB = b.data.appt_date;
+
+    // const dateA = a.kind === "bp" ? a.data.appt_date : a.data.appt_date;
+    // const dateB = b.kind === "bp" ? b.data.appt_date : b.data.appt_date;
+    return new Date(dateB).getTime() - new Date(dateA).getTime();
+  }), [bpLogs, radiologyReports]);
+
+  const docs = useMemo(() =>
+    activeFilter === "all" ? allDocs : allDocs.filter((d) => d.kind === activeFilter),
+    [allDocs, activeFilter]
   );
 
   return (
@@ -59,15 +81,15 @@ export function DocumentTimeline({ patientId }: { patientId: string }) {
         )}
         {docs.map((doc) => (
           <TimelineItem
-            key={doc.id}
-            document={doc}
+            key={doc.kind === "bp" ? doc.data.log_id : doc.data.log_id}
+            doc={doc}
             onSelect={() => setSelected(doc)}
           />
         ))}
       </div>
 
       <DocumentDrawer
-        document={selected}
+        doc={selected}
         open={!!selected}
         onOpenChange={(open) => !open && setSelected(null)}
       />

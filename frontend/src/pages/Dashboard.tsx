@@ -1,18 +1,24 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Search, Users, ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { RecentUploads } from "@/components/dashboard/RecentUploads";
-import { patients } from "@/data/patients";
+import { fetchPatients } from "@/lib/api";
+import type { Patient } from "@/data/types";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
+  const { data: patients = [] } = useQuery({
+    queryKey: ["patients"],
+    queryFn: fetchPatients,
+  });
+
   const results = query
-    ? patients.filter((p) =>
-        `${p.firstName} ${p.lastName} ${p.mrn} ${p.primaryDiagnosis}`
+    ? patients.filter((p: Patient) =>
+        `${p.full_name} ${p.primary_provider}`
           .toLowerCase()
           .includes(query.toLowerCase()),
       )
@@ -22,9 +28,6 @@ export default function Dashboard() {
     <div className="mx-auto max-w-4xl px-5 py-6 md:px-8 md:py-8 space-y-6 animate-fade-in">
       <div className="flex items-end justify-between gap-4 border-b border-border pb-5">
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
-            Tuesday · April 28, 2026
-          </p>
           <h1 className="mt-1 text-[22px] font-semibold tracking-tight text-foreground">
             Overview
           </h1>
@@ -38,7 +41,6 @@ export default function Dashboard() {
         </Button>
       </div>
 
-      {/* Quick patient search */}
       <div>
         <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.06em] text-muted-foreground">
           Find a patient
@@ -46,7 +48,7 @@ export default function Dashboard() {
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.75} />
           <Input
-            placeholder="Search by name, MRN, or diagnosis"
+            placeholder="Search by name or provider"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="h-10 rounded-[8px] border-border bg-card pl-10 text-[14px] shadow-sm focus-visible:ring-1"
@@ -54,27 +56,24 @@ export default function Dashboard() {
         </div>
         {results.length > 0 && (
           <div className="mt-2 divide-y divide-border rounded-[8px] border border-border bg-card shadow-sm">
-            {results.slice(0, 6).map((p) => (
+            {results.slice(0, 6).map((p: Patient) => (
               <button
-                key={p.id}
-                onClick={() => navigate(`/patients/${p.id}`)}
+                key={p.patient_id}
+                onClick={() => navigate(`/patients/${p.patient_id}`)}
                 className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-secondary/60"
               >
                 <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] bg-secondary text-[10px] font-semibold text-foreground">
-                  {p.firstName[0]}{p.lastName[0]}
+                  {p.full_name[0]}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-medium">{p.firstName} {p.lastName}</p>
-                  <p className="text-[11px] text-muted-foreground tabular-nums">{p.mrn} · {p.primaryDiagnosis}</p>
+                  <p className="text-[13px] font-medium">{p.full_name}</p>
+                  <p className="text-[11px] text-muted-foreground">{p.primary_provider}</p>
                 </div>
               </button>
             ))}
           </div>
         )}
       </div>
-
-      {/* Recent activity across all patients */}
-      <RecentUploads />
     </div>
   );
 }
