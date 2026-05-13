@@ -1,6 +1,5 @@
 package com.example;
 
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.web.bind.annotation.*;
 import java.sql.*;
 import java.util.List;
