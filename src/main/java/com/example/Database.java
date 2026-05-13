@@ -5,9 +5,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet; 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.LinkedList;
 
 public class Database {
     private static Connection db_connection;
@@ -26,8 +25,13 @@ public class Database {
         return findPatientID(ID).size() > 0;
     }
 
-    // for patient attributes only
-
+    /**
+     * Adds a patient to the patient attributes table
+     * 
+     * @param p the new patient to be added
+     * @throws SQLException if connection is invalid or anything goes wrong in
+     *                      general idk
+    */
     public void addPatient(Patient p) throws SQLException {
         final String query = "INSERT INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
@@ -49,7 +53,13 @@ public class Database {
         sql.executeUpdate();
         sql.close();
     }
-    
+
+    /**
+     * Removes a patient from the patient attributes table
+     * 
+     * @param patient_id the id of the patient you're removing
+     * @throws SQLException if anything goes wrong w/the connection
+    */
     public void removePatient(int patient_id) throws SQLException {
         final String query = "DELETE FROM attributes WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
@@ -60,14 +70,14 @@ public class Database {
     }
 
     // next 2 methods return all patients of this parameter
-    public ArrayList<Patient> findPatientID(int ID) throws SQLException {
+    public List<Patient> findPatientID(int ID) throws SQLException {
         // send query
         final String query = "SELECT * FROM attributes WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
 
         ResultSet rs = sql.executeQuery();
-        ArrayList<Patient> list = new ArrayList<>();
+        List<Patient> list = new LinkedList<>();
 
         while (rs.next()) {
             list.add(
@@ -96,13 +106,13 @@ public class Database {
         return list;
     }
 
-    public ArrayList<Patient> findPatientName(String name) throws SQLException {
+    public List<Patient> findPatientName(String name) throws SQLException {
         final String query = "SELECT * FROM attributes WHERE full_name = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setString(1, name);
 
         ResultSet rs = sql.executeQuery();
-        ArrayList<Patient> list = new ArrayList<>();
+        List<Patient> list = new LinkedList<>();
 
         while (rs.next()) {
             list.add(
@@ -131,8 +141,11 @@ public class Database {
         return list;
     }
 
-    // for bp logs only
-
+    /**
+     * Adds a BP Log for a patient (the patient id is inside the BPLog class)
+     * @param bp
+     * @throws SQLException
+    */
     public void addBPLogs(BPLog bp) throws SQLException{
         final String query = "INSERT INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
@@ -160,13 +173,13 @@ public class Database {
         sql.close();
     }
 
-    public ArrayList<BPLog> findBPID(int ID) throws SQLException {
+    public List<BPLog> findBPID(int ID) throws SQLException {
         final String query = "SELECT * FROM bp_logs WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
 
         ResultSet rs = sql.executeQuery();
-        ArrayList<BPLog> list = new ArrayList<>();
+        List<BPLog> list = new LinkedList<>();
 
         while (rs.next()) {
             list.add(
@@ -218,13 +231,13 @@ public class Database {
         sql.close();
     }
 
-    public ArrayList<RadiologyLog> findRadiologyID(int ID) throws SQLException {
+    public List<RadiologyLog> findRadiologyID(int ID) throws SQLException {
         final String query = "SELECT * FROM radiology_logs WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
 
         ResultSet rs = sql.executeQuery();
-        ArrayList<RadiologyLog> list = new ArrayList<>();
+        List<RadiologyLog> list = new LinkedList<>();
         while (rs.next()) {
             list.add(
                 new RadiologyLog(

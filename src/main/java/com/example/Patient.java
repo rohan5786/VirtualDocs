@@ -1,6 +1,7 @@
 package com.example;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Patient {
     public String full_name, date_of_birth, allergies, existing_medications, phone_number, address,
@@ -8,8 +9,8 @@ public class Patient {
     public int patient_id, sex; // 1 = male, 0 = female
     public boolean hipaa_agreement;
 
-    private ArrayList<BPLog> bpLogs;
-    private ArrayList<RadiologyLog> radiologyLogs;
+    private HashMap<Integer, BPLog> bpLogs;
+    private HashMap<Integer, RadiologyLog> radiologyLogs;
 
     public Patient(
         String full_name,
@@ -42,11 +43,11 @@ public class Patient {
     }
 
     public void addBP(BPLog bp) {
-        bpLogs.add(bp);
+        bpLogs.put(bp.log_id, bp);
     }
 
     public void addRadiology(RadiologyLog rl) {
-        radiologyLogs.add(rl);
+        radiologyLogs.put(rl.log_id, rl);
     }
 
     public String toString() {
