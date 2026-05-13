@@ -1,5 +1,6 @@
 package com.example;
 
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.web.bind.annotation.*;
 import java.sql.*;
 import java.util.List;
@@ -19,15 +20,21 @@ public class APIController {
 
     // for getting patients by id
     @GetMapping("/patients/{id}")
-    public Patient getPatientID(@PathVariable int id) throws SQLException {
+    public List<Patient> getPatientID(@PathVariable int id) throws SQLException {
         db.config();
-        return db.findPatientID(id).isEmpty() ? null : db.findPatientID(id).get(0);
+        return db.findPatientID(id);
     }
 
     @GetMapping("/patients/{id}/radiology_logs")
-    public RadiologyLog getPatientRadiologyID(@PathVariable int id) throws SQLException {
+    public List<RadiologyLog> getPatientRadiologyID(@PathVariable int id) throws SQLException {
         db.config();
-        return db.findRadiologyID(id).isEmpty() ? null : db.findRadiologyID(id).get(0);
+        return db.findRadiologyID(id);
+    }
+
+    @GetMapping("/patients/{id}/bp_logs")
+    public List<BPLog> getPatinetBPID(@PathVariable int id) throws SQLException {
+        db.config();
+        return db.findBPID(id);
     }
 
 }
