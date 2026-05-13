@@ -1,1 +1,7 @@
+com\example\Database.class
+com\example\BPLog.class
+com\example\RadiologyLog.class
+com\example\App.class
+com\example\Patient.class
+com\example\Utils.class
 com\example\APIController.class
