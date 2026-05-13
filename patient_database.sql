@@ -1,5 +1,9 @@
 USE patient_database;
 
+ALTER TABLE attributes ADD COLUMN 
+doctor_notes VARCHAR(200);
+
+
 CREATE TABLE IF NOT EXISTS bp_logs(
     patient_id INT,
     log_id INT,
