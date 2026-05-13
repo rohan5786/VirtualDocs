@@ -4,7 +4,8 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.ResultSet; 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,13 +26,8 @@ public class Database {
         return findPatientID(ID).size() > 0;
     }
 
-    /**
-     * Adds a patient to the patient attributes table
-     * 
-     * @param p the new patient to be added
-     * @throws SQLException if connection is invalid or anything goes wrong in
-     *                      general idk
-     */
+    // for patient attributes only
+
     public void addPatient(Patient p) throws SQLException {
         final String query = "INSERT INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
@@ -53,13 +49,7 @@ public class Database {
         sql.executeUpdate();
         sql.close();
     }
-
-    /**
-     * Removes a patient from the patient attributes table
-     * 
-     * @param patient_id the id of the patient you're removing
-     * @throws SQLException if anything goes wrong w/the connection
-     */
+    
     public void removePatient(int patient_id) throws SQLException {
         final String query = "DELETE FROM attributes WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
@@ -70,31 +60,33 @@ public class Database {
     }
 
     // next 2 methods return all patients of this parameter
-    public List<Patient> findPatientID(int ID) throws SQLException {
+    public ArrayList<Patient> findPatientID(int ID) throws SQLException {
         // send query
         final String query = "SELECT * FROM attributes WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
 
         ResultSet rs = sql.executeQuery();
-        List<Patient> list = new LinkedList<>();
+        ArrayList<Patient> list = new ArrayList<>();
 
         while (rs.next()) {
             list.add(
-                    new Patient(
-                            rs.getString(1),
-                            rs.getInt(2),
-                            rs.getString(3),
-                            rs.getInt(4),
-                            rs.getString(5),
-                            rs.getString(6),
-                            rs.getString(7),
-                            rs.getString(8),
-                            rs.getString(9),
-                            rs.getString(10),
-                            rs.getString(11),
-                            rs.getInt(12) == 1,
-                            rs.getString(13)));
+                new Patient(
+                    rs.getString(1),
+                    rs.getInt(2),
+                    rs.getString(3),
+                    rs.getInt(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7),
+                    rs.getString(8),
+                    rs.getString(9),
+                    rs.getString(10),
+                    rs.getString(11),
+                    rs.getInt(12) == 1,
+                    rs.getString(13)
+                )
+            );
         }
 
         rs.close();
@@ -104,30 +96,32 @@ public class Database {
         return list;
     }
 
-    public List<Patient> findPatientName(String name) throws SQLException {
+    public ArrayList<Patient> findPatientName(String name) throws SQLException {
         final String query = "SELECT * FROM attributes WHERE full_name = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setString(1, name);
 
         ResultSet rs = sql.executeQuery();
-        List<Patient> list = new LinkedList<>();
+        ArrayList<Patient> list = new ArrayList<>();
 
         while (rs.next()) {
             list.add(
-                    new Patient(
-                            rs.getString(1),
-                            rs.getInt(2),
-                            rs.getString(3),
-                            rs.getInt(4),
-                            rs.getString(5),
-                            rs.getString(6),
-                            rs.getString(7),
-                            rs.getString(8),
-                            rs.getString(9),
-                            rs.getString(10),
-                            rs.getString(11),
-                            rs.getInt(12) == 1,
-                            rs.getString(13)));
+                new Patient(
+                    rs.getString(1),
+                    rs.getInt(2),
+                    rs.getString(3),
+                    rs.getInt(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7),
+                    rs.getString(8),
+                    rs.getString(9),
+                    rs.getString(10),
+                    rs.getString(11),
+                    rs.getInt(12) == 1,
+                    rs.getString(13)
+                )
+            );
         }
 
         rs.close();
@@ -137,12 +131,9 @@ public class Database {
         return list;
     }
 
-    /**
-     * Adds a BP Log for a patient (the patient id is inside the BPLog class)
-     * @param bp
-     * @throws SQLException
-     */
-    public void addBPLogs(BPLog bp) throws SQLException {
+    // for bp logs only
+
+    public void addBPLogs(BPLog bp) throws SQLException{
         final String query = "INSERT INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
 
@@ -169,26 +160,28 @@ public class Database {
         sql.close();
     }
 
-    public List<BPLog> findBPID(int ID) throws SQLException {
+    public ArrayList<BPLog> findBPID(int ID) throws SQLException {
         final String query = "SELECT * FROM bp_logs WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
 
         ResultSet rs = sql.executeQuery();
-        List<BPLog> list = new LinkedList<>();
+        ArrayList<BPLog> list = new ArrayList<>();
 
         while (rs.next()) {
             list.add(
-                    new BPLog(
-                            rs.getInt(1),
-                            rs.getInt(2),
-                            rs.getString(3),
-                            rs.getString(4),
-                            rs.getInt(5),
-                            rs.getString(6),
-                            rs.getString(7),
-                            rs.getString(8),
-                            rs.getString(9)));
+                new BPLog(
+                    rs.getInt(1),
+                    rs.getInt(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getInt(5),
+                    rs.getString(6),
+                    rs.getString(7),
+                    rs.getString(8),
+                    rs.getString(9)
+                )
+            );
         }
 
         rs.close();
@@ -203,7 +196,7 @@ public class Database {
     public void addRadiologyLog(RadiologyLog rl) throws SQLException {
         final String query = "INSERT INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
-
+        
         sql.setInt(1, rl.patient_id);
         sql.setInt(2, rl.log_id);
         sql.setString(3, rl.appt_date);
@@ -225,29 +218,31 @@ public class Database {
         sql.close();
     }
 
-    public List<RadiologyLog> findRadiologyID(int ID) throws SQLException {
+    public ArrayList<RadiologyLog> findRadiologyID(int ID) throws SQLException {
         final String query = "SELECT * FROM radiology_logs WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
 
         ResultSet rs = sql.executeQuery();
-        List<RadiologyLog> list = new LinkedList<>();
+        ArrayList<RadiologyLog> list = new ArrayList<>();
         while (rs.next()) {
             list.add(
-                    new RadiologyLog(
-                            rs.getInt(1),
-                            rs.getInt(2),
-                            rs.getString(3),
-                            rs.getString(4),
-                            rs.getString(5),
-                            rs.getString(6),
-                            rs.getString(7)));
+                new RadiologyLog(
+                    rs.getInt(1),
+                    rs.getInt(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7)
+                )
+            );
         }
 
         rs.close();
         sql.close();
         // db_connection.close();
-
+        
         return list;
     }
 
@@ -264,31 +259,7 @@ public class Database {
     private void printPatientSet(ResultSet rs) throws SQLException {
         while (rs.next()) {
             System.out.println(
-                    new Patient(
-                            rs.getString(1),
-                            rs.getInt(2),
-                            rs.getString(3),
-                            rs.getInt(4),
-                            rs.getString(5),
-                            rs.getString(6),
-                            rs.getString(7),
-                            rs.getString(8),
-                            rs.getString(9),
-                            rs.getString(10),
-                            rs.getString(11),
-                            rs.getInt(12) == 1,
-                            rs.getString(13)));
-        }
-    }
-
-    public List<Patient> allPatients() throws SQLException {
-        final String query = "SELECT * FROM attributes";
-        PreparedStatement sql = db_connection.prepareStatement(query);
-        ResultSet rs = sql.executeQuery();
-
-        List<Patient> list = new LinkedList<>();
-        while (rs.next()) {
-            list.add(new Patient(
+                new Patient(
                     rs.getString(1),
                     rs.getInt(2),
                     rs.getString(3),
@@ -301,7 +272,34 @@ public class Database {
                     rs.getString(10),
                     rs.getString(11),
                     rs.getInt(12) == 1,
-                    rs.getString(13)));
+                    rs.getString(13)
+                )
+            );
+        }
+    }
+
+    public List<Patient> allPatients() throws SQLException {
+        final String query = "SELECT * FROM attributes";
+        PreparedStatement sql = db_connection.prepareStatement(query);
+        ResultSet rs = sql.executeQuery();
+
+        List<Patient> list = new LinkedList<>();
+        while (rs.next()) {
+            list.add(new Patient(
+                rs.getString(1),
+                rs.getInt(2),
+                rs.getString(3),
+                rs.getInt(4),
+                rs.getString(5),
+                rs.getString(6),
+                rs.getString(7),
+                rs.getString(8),
+                rs.getString(9),
+                rs.getString(10),
+                rs.getString(11),
+                rs.getInt(12) == 1,
+                rs.getString(13)
+            ));
         }
 
         rs.close();
