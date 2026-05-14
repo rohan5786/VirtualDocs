@@ -1,4 +1,5 @@
 package com.example;
+
 public class BPLog {
     public int patient_id, log_id, reading_number;
     public String appt_date, time_of_day, SBP, DBP, pulse, patient_status;

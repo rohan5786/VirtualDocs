@@ -33,7 +33,7 @@ public class Database {
      *                      general idk
     */
     public void addPatient(Patient p) throws SQLException {
-        final String query = "INSERT INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        final String query = "INSERT IGNORE INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
 
         sql.setString(1, p.full_name); // indexing starts at 1 for jdbc
@@ -147,7 +147,7 @@ public class Database {
      * @throws SQLException
     */
     public void addBPLogs(BPLog bp) throws SQLException{
-        final String query = "INSERT INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        final String query = "INSERT INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE log_id = log_id + 1;";
         PreparedStatement sql = db_connection.prepareStatement(query);
 
         sql.setInt(1, bp.patient_id); // indexing starts at 1 for jdbc
@@ -207,7 +207,7 @@ public class Database {
     // for raidology logs only
 
     public void addRadiologyLog(RadiologyLog rl) throws SQLException {
-        final String query = "INSERT INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?);";
+        final String query = "INSERT INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE log_id = log_id + 1;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         
         sql.setInt(1, rl.patient_id);

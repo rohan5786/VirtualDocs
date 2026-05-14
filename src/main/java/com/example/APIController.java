@@ -19,9 +19,9 @@ public class APIController {
 
     // for getting patients by id
     @GetMapping("/patients/{id}")
-    public List<Patient> getPatientID(@PathVariable int id) throws SQLException {
+    public Patient getPatientID(@PathVariable int id) throws SQLException {
         db.config();
-        return db.findPatientID(id);
+        return db.findPatientID(id).isEmpty() ? null : db.findPatientID(id).get(0);
     }
 
     @GetMapping("/patients/{id}/radiology_logs")

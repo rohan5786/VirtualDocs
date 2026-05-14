@@ -25,3 +25,6 @@ CREATE TABLE IF NOT EXISTS radiology_logs(
     findings VARCHAR(50),
     patient_status VARCHAR(100)
 );
+
+ALTER TABLE bp_logs ADD PRIMARY KEY (patient_id, log_id);
+ALTER TABLE radiology_logs ADD PRIMARY KEY (patient_id, log_id);
