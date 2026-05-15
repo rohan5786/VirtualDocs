@@ -143,11 +143,11 @@ public class Database {
 
     /**
      * Adds a BP Log for a patient (the patient id is inside the BPLog class)
-     * @param bp
-     * @throws SQLException
+     * @param bp // the bp log you're adding 
+     * @throws SQLException // in case anything goes wrong with connections 
     */
-    public void addBPLogs(BPLog bp) throws SQLException{
-        final String query = "INSERT INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE log_id = log_id + 1;";
+    public void addBPLogs(BPLog bp) throws SQLException {
+        final String query = "INSERT IGNORE INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
 
         sql.setInt(1, bp.patient_id); // indexing starts at 1 for jdbc
@@ -207,7 +207,7 @@ public class Database {
     // for raidology logs only
 
     public void addRadiologyLog(RadiologyLog rl) throws SQLException {
-        final String query = "INSERT INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE log_id = log_id + 1;";
+        final String query = "INSERT IGNORE INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
         
         sql.setInt(1, rl.patient_id);

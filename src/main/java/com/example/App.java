@@ -11,19 +11,19 @@ public class App {
         Database db = new Database();
         db.config();
         // db.removeBPLogs(2);
-        db.addBPLogs(
-            new BPLog(
-                2,
-                1,
-                "2024-05-13",
-                "05:11:00",
-                76,
-                "114/39",
-                "139/41",
-                "190 BPM",
-                "bro not going back home"
-            )            
-        );
+        // db.addBPLogs(
+        //     new BPLog(
+        //         2,
+        //         2,
+        //         "2024-05-14",
+        //         "05:11:00",
+        //         76,
+        //         "114/39",
+        //         "139/41",
+        //         "190 BPM",
+        //         "bro not going back home"
+        //     )            
+        // );
 
         SpringApplication.run(App.class, args);
     }
