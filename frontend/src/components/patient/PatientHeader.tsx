@@ -16,6 +16,12 @@ export function PatientHeader({ patient }: { patient: Patient }) {
             <h1 className="text-[20px] font-semibold tracking-tight">
               {patient.full_name}
             </h1>
+            {/* If the patient is archived, display the following */}
+            {patient.archived && (
+              <span className = "inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                Archived
+              </span>
+            )}
             <span className="text-[12px] text-muted-foreground tabular-nums">
               {calcAge(patient.date_of_birth)} yrs · {patient.sex == 1 ? "Male" : "Female"} · DOB {formatDate(patient.date_of_birth)}
             </span>

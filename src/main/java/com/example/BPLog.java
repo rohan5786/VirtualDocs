@@ -25,17 +25,4 @@ public class BPLog {
         this.pulse = pulse;
         this.patient_status = patient_status;
     }
-
-    public String toString() {
-        final String bp_string = patient_id + " | " + 
-            log_id + " | " + 
-            reading_number + " | " + 
-            appt_date + " | " + 
-            time_of_day + " | " + 
-            SBP + " | " + 
-            DBP + " | " + 
-            pulse + " | " + 
-            patient_status;
-        return bp_string;
-    }
 }

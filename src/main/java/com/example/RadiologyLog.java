@@ -21,16 +21,4 @@ public class RadiologyLog {
         this.findings = findings;
         this.patient_status = patient_status;
     }
-
-    public String toString() {
-        final String radiology_string = patient_id + " | " +
-            log_id + " | " +
-            appt_date + " | " +
-            imaging_type + " | " +
-            body_part + " | " +
-            findings + " | " +
-            patient_status;
-        
-            return radiology_string;
-    }
 }

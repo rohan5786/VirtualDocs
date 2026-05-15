@@ -7,7 +7,7 @@ public class Patient {
     public String full_name, date_of_birth, allergies, existing_medications, phone_number, address,
             primary_provider, insurance, documents, doctor_notes;
     public int patient_id, sex; // 1 = male, 0 = female
-    public boolean hipaa_agreement;
+    public boolean hipaa_agreement, archived;
 
     private HashMap<Integer, BPLog> bpLogs;
     private HashMap<Integer, RadiologyLog> radiologyLogs;
@@ -25,7 +25,8 @@ public class Patient {
         String insurance,
         String documents,
         boolean hipaa_agreement,
-        String doctor_notes
+        String doctor_notes,
+        boolean archived
     ) {
         this.full_name = full_name;
         this.patient_id = patient_id;
@@ -40,6 +41,7 @@ public class Patient {
         this.documents = documents;
         this.hipaa_agreement = hipaa_agreement;
         this.doctor_notes = doctor_notes;
+        this.archived = archived;
     }
 
     public void addBP(BPLog bp) {
@@ -48,23 +50,6 @@ public class Patient {
 
     public void addRadiology(RadiologyLog rl) {
         radiologyLogs.put(rl.log_id, rl);
-    }
-
-    public String toString() {
-        final String patient_string =  
-            full_name + " | " +
-            patient_id + " | " +
-            date_of_birth + " | " +
-            (sex == 1 ? "male" : "female") + " | " +
-            allergies + " | " +
-            existing_medications + " | " +
-            phone_number + " | " +
-            address + " | " +
-            primary_provider + " | " +
-            insurance + " | " +
-            documents + " | " +
-            hipaa_agreement;
-        return patient_string;
     }
 
 }

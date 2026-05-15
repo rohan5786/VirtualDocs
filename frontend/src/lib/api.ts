@@ -1,3 +1,5 @@
+import { Patient } from "@/data/types";
+
 const BASE = "/api";   // proxied to localhost:8080 by Vite (what runs the frontend)
 
 // patients only

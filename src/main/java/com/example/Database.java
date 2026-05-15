@@ -49,23 +49,37 @@ public class Database {
         sql.setString(11, p.documents);
         sql.setInt(12, p.hipaa_agreement ? 1 : 0);
         sql.setString(13, p.doctor_notes);
+        sql.setInt(14, p.archived ? 1 : 0);
 
         sql.executeUpdate();
         sql.close();
     }
 
     /**
-     * Removes a patient from the patient attributes table
+     * Archives a patient --> archives their attributes &  all of their logs (if any)
      * 
-     * @param patient_id the id of the patient you're removing
+     * @param patient_id the id of the patient you're archiving
      * @throws SQLException if anything goes wrong w/the connection
     */
-    public void removePatient(int patient_id) throws SQLException {
-        final String query = "DELETE FROM attributes WHERE patient_id = ?;";
-        PreparedStatement sql = db_connection.prepareStatement(query);
-        sql.setInt(1, patient_id);
+    public void archivePatient(int patient_id) throws SQLException {
+        final String query1 = "UPDATE attributes SET COLUMN archived = 1 WHERE patient_id = ?;";
+        final String query2 = "UPDATE bp_logs SET COLUMN archived = 1 WHERE patient_id = ?;";
+        final String query3 = "UPDATE radiology_logs SET COLUMN archived = 1 WHERE patient_id = ?;";
 
+        PreparedStatement sql;
+        
+        sql = db_connection.prepareStatement(query1);
+        sql.setInt(1, patient_id);
         sql.executeUpdate();
+
+        sql = db_connection.prepareStatement(query2);
+        sql.setInt(1, patient_id);
+        sql.executeUpdate();
+
+        sql = db_connection.prepareStatement(query3);
+        sql.setInt(1, patient_id);
+        sql.executeUpdate();
+
         sql.close();
     }
 
@@ -94,7 +108,8 @@ public class Database {
                     rs.getString(10),
                     rs.getString(11),
                     rs.getInt(12) == 1,
-                    rs.getString(13)
+                    rs.getString(13),
+                    rs.getInt(14) == 1
                 )
             );
         }
@@ -129,7 +144,8 @@ public class Database {
                     rs.getString(10),
                     rs.getString(11),
                     rs.getInt(12) == 1,
-                    rs.getString(13)
+                    rs.getString(13),
+                    rs.getInt(14) == 1
                 )
             );
         }
@@ -143,8 +159,8 @@ public class Database {
 
     /**
      * Adds a BP Log for a patient (the patient id is inside the BPLog class)
-     * @param bp // the bp log you're adding 
-     * @throws SQLException // in case anything goes wrong with connections 
+     * @param bp the bp log you're adding 
+     * @throws SQLException in case anything goes wrong with connections 
     */
     public void addBPLogs(BPLog bp) throws SQLException {
         final String query = "INSERT IGNORE INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -204,8 +220,11 @@ public class Database {
         return list;
     }
 
-    // for raidology logs only
-
+    /**
+     * For adding a raidology log to the database
+     * @param rl the radiology log we're adding
+     * @throws SQLException in case anything with the mysql connection goes wrong 
+     */
     public void addRadiologyLog(RadiologyLog rl) throws SQLException {
         final String query = "INSERT IGNORE INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
@@ -285,7 +304,8 @@ public class Database {
                     rs.getString(10),
                     rs.getString(11),
                     rs.getInt(12) == 1,
-                    rs.getString(13)
+                    rs.getString(13),
+                    rs.getInt(14) == 1
                 )
             );
         }
@@ -311,7 +331,8 @@ public class Database {
                 rs.getString(10),
                 rs.getString(11),
                 rs.getInt(12) == 1,
-                rs.getString(13)
+                rs.getString(13),
+                rs.getInt(14) == 1
             ));
         }
 
