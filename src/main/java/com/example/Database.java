@@ -6,9 +6,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet; 
 import java.util.List;
-
-import jakarta.persistence.PrePersist;
-
 import java.util.LinkedList;
 
 public class Database {
