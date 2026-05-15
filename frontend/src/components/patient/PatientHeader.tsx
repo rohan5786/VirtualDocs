@@ -23,7 +23,7 @@ export function PatientHeader({ patient }: { patient: Patient }) {
               </span>
             )}
             <span className="text-[12px] text-muted-foreground tabular-nums">
-              {calcAge(patient.date_of_birth)} yrs · {patient.sex == 1 ? "Male" : "Female"} · DOB {formatDate(patient.date_of_birth)}
+              {calcAge(patient.date_of_birth)} yrs · {patient.sex == 1 ? "Male" : "Female"} · Date of Birth: {formatDate(patient.date_of_birth)}
             </span>
           </div>
           <dl className="mt-3 grid grid-cols-2 gap-x-8 gap-y-1.5 text-[12px] sm:grid-cols-4">

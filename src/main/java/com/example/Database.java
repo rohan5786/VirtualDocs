@@ -6,6 +6,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet; 
 import java.util.List;
+
+import jakarta.persistence.PrePersist;
+
 import java.util.LinkedList;
 
 public class Database {
@@ -33,7 +36,7 @@ public class Database {
      *                      general idk
     */
     public void addPatient(Patient p) throws SQLException {
-        final String query = "INSERT IGNORE INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        final String query = "INSERT IGNORE INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
 
         sql.setString(1, p.full_name); // indexing starts at 1 for jdbc
@@ -61,25 +64,14 @@ public class Database {
      * @param patient_id the id of the patient you're archiving
      * @throws SQLException if anything goes wrong w/the connection
     */
-    public void archivePatient(int patient_id) throws SQLException {
-        final String query1 = "UPDATE attributes SET COLUMN archived = 1 WHERE patient_id = ?;";
-        final String query2 = "UPDATE bp_logs SET COLUMN archived = 1 WHERE patient_id = ?;";
-        final String query3 = "UPDATE radiology_logs SET COLUMN archived = 1 WHERE patient_id = ?;";
+    public void setArchivedPatient(int patient_id, boolean archived) throws SQLException {
+        final String query1 = "UPDATE attributes SET COLUMN archived = ? WHERE patient_id = ?;";
+        PreparedStatement sql = db_connection.prepareStatement(query1);
 
-        PreparedStatement sql;
+        sql.setInt(1, archived ? 1 : 0);
+        sql.setInt(2, patient_id);
         
-        sql = db_connection.prepareStatement(query1);
-        sql.setInt(1, patient_id);
         sql.executeUpdate();
-
-        sql = db_connection.prepareStatement(query2);
-        sql.setInt(1, patient_id);
-        sql.executeUpdate();
-
-        sql = db_connection.prepareStatement(query3);
-        sql.setInt(1, patient_id);
-        sql.executeUpdate();
-
         sql.close();
     }
 
@@ -160,10 +152,10 @@ public class Database {
     /**
      * Adds a BP Log for a patient (the patient id is inside the BPLog class)
      * @param bp the bp log you're adding 
-     * @throws SQLException in case anything goes wrong with connections 
+     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
     */
     public void addBPLogs(BPLog bp) throws SQLException {
-        final String query = "INSERT IGNORE INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        final String query = "INSERT IGNORE INTO bp_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
 
         sql.setInt(1, bp.patient_id); // indexing starts at 1 for jdbc
@@ -180,10 +172,18 @@ public class Database {
         sql.close();
     }
 
-    public void removeBPLogs(int patient_id) throws SQLException {
-        final String query = "DELETE FROM bp_logs WHERE patient_id = ?;";
+    /**
+     * Sets archived status for a BP log (never delete, only archive)
+     * @param log_id the ID of the log whose archive status is to be set
+     * @param archived the archive status to be set
+     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
+     */
+    public void setArchivedBPLogs(int log_id, boolean archived) throws SQLException {
+        final String query = "UPDATE bp_logs SET COLUMN archived = ? WHERE log_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
-        sql.setInt(1, patient_id);
+
+        sql.setInt(1, archived ? 1 : 0);
+        sql.setInt(2, log_id);
 
         sql.executeUpdate();
         sql.close();
@@ -208,7 +208,8 @@ public class Database {
                     rs.getString(6),
                     rs.getString(7),
                     rs.getString(8),
-                    rs.getString(9)
+                    rs.getString(9),
+                    rs.getInt(10) == 1
                 )
             );
         }
@@ -223,10 +224,10 @@ public class Database {
     /**
      * For adding a raidology log to the database
      * @param rl the radiology log we're adding
-     * @throws SQLException in case anything with the mysql connection goes wrong 
+     * @throws SQLException returns stack trace to debug w/JDBC driver or database error 
      */
     public void addRadiologyLog(RadiologyLog rl) throws SQLException {
-        final String query = "INSERT IGNORE INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?);";
+        final String query = "INSERT IGNORE INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
         
         sql.setInt(1, rl.patient_id);
@@ -236,15 +237,35 @@ public class Database {
         sql.setString(5, rl.body_part);
         sql.setString(6, rl.findings);
         sql.setString(7, rl.patient_status);
+        sql.setInt(8, rl.archived ? 1 : 0);
 
         sql.executeUpdate();
         sql.close();
     }
 
-    public void removeRadiologyLog(int ID) throws SQLException {
-        final String query = "DELETE FROM radiology_logs WHERE patient_id = ?;";
+    /*
+    public void archivePatientRadiologyLog(int ID) throws SQLException {
+        final String query = "UPDATE radiology_logs SET COLUMN archived = 1 WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
+
+        sql.executeUpdate();
+        sql.close();
+    }
+    */
+
+    /**
+     * sets archived status of a radiology log (never delete, only archive)
+     * @param log_id the ID of the log whose archive status is to be set
+     * @param archived the archive status to be set
+     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
+     */
+    public void setArchivedRadiologyLogs(int log_id, boolean archived) throws SQLException {
+        final String query = "UPDATE raidology_logs SET COLUMN archived = ? WHERE log_id = ?;";
+        PreparedStatement sql = db_connection.prepareStatement(query);
+
+        sql.setInt(1, archived ? 1 : 0);
+        sql.setInt(2, log_id);
 
         sql.executeUpdate();
         sql.close();
@@ -266,7 +287,8 @@ public class Database {
                     rs.getString(4),
                     rs.getString(5),
                     rs.getString(6),
-                    rs.getString(7)
+                    rs.getString(7),
+                    rs.getInt(8) == 1
                 )
             );
         }
@@ -311,6 +333,13 @@ public class Database {
         }
     }
 
+    /**
+     * Returns a List<Patients> to be turned into a JSON when fetched by the api.ts functions;
+     * the function is called by another mapped one in APIController
+     * 
+     * @return returns list of patients to be JSON'd when api.ts fetches the data
+     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
+     */
     public List<Patient> allPatients() throws SQLException {
         final String query = "SELECT * FROM attributes";
         PreparedStatement sql = db_connection.prepareStatement(query);
