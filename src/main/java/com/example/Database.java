@@ -164,6 +164,7 @@ public class Database {
         sql.setString(7, bp.DBP);
         sql.setString(8, bp.pulse);
         sql.setString(9, bp.patient_status);
+        sql.setInt(10, bp.archived ? 1 : 0);
 
         sql.executeUpdate();
         sql.close();
