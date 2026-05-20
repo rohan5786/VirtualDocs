@@ -71,48 +71,17 @@ public class Database {
         sql.close();
     }
 
-    // next 2 methods return all patients of this parameter
+    /**
+     * returns patient based on patient ID
+     * @param ID ID of the patient
+     * @return
+     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
+     */
     public List<Patient> findPatientID(int ID) throws SQLException {
         // send query
         final String query = "SELECT * FROM attributes WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
         sql.setInt(1, ID);
-
-        ResultSet rs = sql.executeQuery();
-        List<Patient> list = new LinkedList<>();
-
-        while (rs.next()) {
-            list.add(
-                new Patient(
-                    rs.getString(1),
-                    rs.getInt(2),
-                    rs.getString(3),
-                    rs.getInt(4),
-                    rs.getString(5),
-                    rs.getString(6),
-                    rs.getString(7),
-                    rs.getString(8),
-                    rs.getString(9),
-                    rs.getString(10),
-                    rs.getString(11),
-                    rs.getInt(12) == 1,
-                    rs.getString(13),
-                    rs.getInt(14) == 1
-                )
-            );
-        }
-
-        rs.close();
-        sql.close();
-        // db_connection.close();
-
-        return list;
-    }
-
-    public List<Patient> findPatientName(String name) throws SQLException {
-        final String query = "SELECT * FROM attributes WHERE full_name = ?;";
-        PreparedStatement sql = db_connection.prepareStatement(query);
-        sql.setString(1, name);
 
         ResultSet rs = sql.executeQuery();
         List<Patient> list = new LinkedList<>();
@@ -187,6 +156,12 @@ public class Database {
         sql.close();
     }
 
+    /**
+     * Finds BP Logs belonging to a given patient by their ID 
+     * @param ID ID of the patient
+     * @return
+     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
+     */
     public List<BPLog> findBPID(int ID) throws SQLException {
         final String query = "SELECT * FROM bp_logs WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
@@ -266,6 +241,12 @@ public class Database {
         sql.close();
     }
 
+    /**
+     * finds radiology logs based on patient id 
+     * @param ID ID of the patient
+     * @return
+     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
+     */
     public List<RadiologyLog> findRadiologyID(int ID) throws SQLException {
         final String query = "SELECT * FROM radiology_logs WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
@@ -293,16 +274,6 @@ public class Database {
         // db_connection.close();
         
         return list;
-    }
-
-    // prints all users by some query's rules
-    public void onResultQuery(String sqlQuery) throws SQLException {
-        PreparedStatement sql = db_connection.prepareStatement(sqlQuery);
-        ResultSet rs = sql.executeQuery();
-        printPatientSet(rs);
-
-        rs.close();
-        sql.close();
     }
 
     private void printPatientSet(ResultSet rs) throws SQLException {
