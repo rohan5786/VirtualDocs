@@ -62,7 +62,7 @@ public class Database {
      * @throws SQLException if anything goes wrong w/the connection
     */
     public void setArchivedPatient(int patient_id, boolean archived) throws SQLException {
-        final String query1 = "UPDATE attributes SET COLUMN archived = ? WHERE patient_id = ?;";
+        final String query1 = "UPDATE attributes SET archived = ? WHERE patient_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query1);
 
         sql.setInt(1, archived ? 1 : 0);
@@ -177,7 +177,7 @@ public class Database {
      * @throws SQLException returns stack trace to debug w/JDBC driver or database error
      */
     public void setArchivedBPLogs(int log_id, boolean archived) throws SQLException {
-        final String query = "UPDATE bp_logs SET COLUMN archived = ? WHERE log_id = ?;";
+        final String query = "UPDATE bp_logs SET archived = ? WHERE log_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
 
         sql.setInt(1, archived ? 1 : 0);
@@ -259,7 +259,7 @@ public class Database {
      * @throws SQLException returns stack trace to debug w/JDBC driver or database error
      */
     public void setArchivedRadiologyLogs(int log_id, boolean archived) throws SQLException {
-        final String query = "UPDATE raidology_logs SET COLUMN archived = ? WHERE log_id = ?;";
+        final String query = "UPDATE radiology_logs SET archived = ? WHERE log_id = ?;";
         PreparedStatement sql = db_connection.prepareStatement(query);
 
         sql.setInt(1, archived ? 1 : 0);

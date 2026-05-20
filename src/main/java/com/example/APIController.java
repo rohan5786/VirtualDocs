@@ -36,4 +36,13 @@ public class APIController {
         return db.findBPID(id);
     }
 
+    @GetMapping("/patients/{id}/{isArchived}")
+    public void archivePatientID(@PathVariable int id, @PathVariable int isArchived) throws SQLException {
+        db.config();
+        final boolean archived = isArchived == 1;
+        db.setArchivedPatient(id, archived);
+        db.setArchivedBPLogs(id, archived);
+        db.setArchivedRadiologyLogs(id, archived);
+    }
+
 }
