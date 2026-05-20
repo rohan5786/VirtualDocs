@@ -25,9 +25,24 @@ public class APIController {
     }
 
     @GetMapping("/patients/{id}/radiology_logs")
-    public RadiologyLog getPatientRadiologyID(@PathVariable int id) throws SQLException {
+    public List<RadiologyLog> getPatientRadiologyID(@PathVariable int id) throws SQLException {
         db.config();
-        return db.findRadiologyID(id).isEmpty() ? null : db.findRadiologyID(id).get(0);
+        return db.findRadiologyID(id);
+    }
+
+    @GetMapping("/patients/{id}/bp_logs")
+    public List<BPLog> getPatinetBPID(@PathVariable int id) throws SQLException {
+        db.config();
+        return db.findBPID(id);
+    }
+
+    @GetMapping("/patients/{id}/{isArchived}")
+    public void archivePatientID(@PathVariable int id, @PathVariable int isArchived) throws SQLException {
+        db.config();
+        final boolean archived = isArchived == 1;
+        db.setArchivedPatient(id, archived);
+        db.setArchivedBPLogs(id, archived);
+        db.setArchivedRadiologyLogs(id, archived);
     }
 
 }

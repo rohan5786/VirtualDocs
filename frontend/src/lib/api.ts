@@ -1,4 +1,15 @@
+import { Patient } from "@/data/types";
+
 const BASE = "/api";   // proxied to localhost:8080 by Vite (what runs the frontend)
+
+export async function archivePatient(id: number, isArchived: boolean) {
+  const res = await fetch(`${BASE}/patients/${id}/${isArchived ? 1 : 0}`);
+  if (!res.ok) throw new Error(`Failed to archive patient: ${res.status}`);
+
+  // so that it returns something and  json doesn't try to parse nothing
+  const text = await res.text();
+  return text ? JSON.parse(text) : true;
+}
 
 // patients only
 export async function fetchPatients() {

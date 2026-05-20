@@ -15,6 +15,7 @@ export interface Patient {
   documents: string;
   hipaa_agreement: boolean;
   doctor_notes: string;
+  archived: boolean;
 }
 
 export interface BPLog {
@@ -25,6 +26,7 @@ export interface BPLog {
   DBP: string;
   pulse: string;
   patient_status: string;
+  archived: boolean;
 }
 
 export interface RadiologyReport {
@@ -35,4 +37,5 @@ export interface RadiologyReport {
   body_part: string;
   findings: string;
   patient_status: string;
+  archived: boolean;
 }
