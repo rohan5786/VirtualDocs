@@ -29,8 +29,7 @@ public class Database {
      * Adds a patient to the patient attributes table
      * 
      * @param p the new patient to be added
-     * @throws SQLException if connection is invalid or anything goes wrong in
-     *                      general idk
+     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
     */
     public void addPatient(Patient p) throws SQLException {
         final String query = "INSERT IGNORE INTO attributes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -59,7 +58,7 @@ public class Database {
      * Archives a patient --> archives their attributes &  all of their logs (if any)
      * 
      * @param patient_id the id of the patient you're archiving
-     * @throws SQLException if anything goes wrong w/the connection
+     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
     */
     public void setArchivedPatient(int patient_id, boolean archived) throws SQLException {
         final String query1 = "UPDATE attributes SET archived = ? WHERE patient_id = ?;";
@@ -164,7 +163,8 @@ public class Database {
         sql.setString(7, bp.DBP);
         sql.setString(8, bp.pulse);
         sql.setString(9, bp.patient_status);
-        sql.setInt(10, bp.archived ? 1 : 0);
+        // the reason we allow adding archived bp logs is when initially transferring info
+        sql.setInt(10, bp.archived ? 1 : 0); 
 
         sql.executeUpdate();
         sql.close();
@@ -225,6 +225,14 @@ public class Database {
      * @throws SQLException returns stack trace to debug w/JDBC driver or database error 
      */
     public void addRadiologyLog(RadiologyLog rl) throws SQLException {
+        // test if the patient is already archived
+        PreparedStatement testArchived = db_connection.prepareStatement("SELECT archived FROM attributes WHERE patient_id = ?;");
+        testArchived.setInt(1, rl.patient_id);
+        ResultSet rs = testArchived.executeQuery();
+        while (rs.next())
+            if (rs.getInt(1) == 1)
+                return;
+
         final String query = "INSERT IGNORE INTO radiology_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement sql = db_connection.prepareStatement(query);
         
@@ -240,17 +248,6 @@ public class Database {
         sql.executeUpdate();
         sql.close();
     }
-
-    /*
-    public void archivePatientRadiologyLog(int ID) throws SQLException {
-        final String query = "UPDATE radiology_logs SET COLUMN archived = 1 WHERE patient_id = ?;";
-        PreparedStatement sql = db_connection.prepareStatement(query);
-        sql.setInt(1, ID);
-
-        sql.executeUpdate();
-        sql.close();
-    }
-    */
 
     /**
      * sets archived status of a radiology log (never delete, only archive)
