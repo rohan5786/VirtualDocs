@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Flag, CheckCircle2, Activity, FileImage } from "lucide-react";
 import { toast } from "sonner";
 import type { BPLog, RadiologyReport } from "@/data/types";
+import { Chart as ChartJS } from "chart.js/auto";
+import { Line } from "react-chartjs-2";
 
 type Doc = { kind: "bp"; data: BPLog } | { kind: "radiology"; data: RadiologyReport };
 
@@ -75,21 +77,21 @@ export function DocumentDrawer({ doc, open, onOpenChange }: Props) {
           )}
 
           <div className="flex flex-col gap-1.5 border-t border-border pt-3">
-            <Button
+            {/* <Button
               size="sm"
               className="h-8 w-full justify-center gap-1.5 rounded-[6px] text-[12px] shadow-none"
               onClick={() => { toast.success("Marked as reviewed"); onOpenChange(false); }}
             >
               <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.75} /> Mark as reviewed
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               size="sm"
               variant="outline"
               className="h-8 w-full justify-center gap-1.5 rounded-[6px] text-[12px] text-muted-foreground shadow-none hover:text-foreground"
               onClick={() => toast("Flagged for follow-up")}
             >
               <Flag className="h-3.5 w-3.5" strokeWidth={1.75} /> Flag for follow-up
-            </Button>
+            </Button> */}
           </div>
         </div>
       </SheetContent>
