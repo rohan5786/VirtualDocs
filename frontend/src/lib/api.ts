@@ -35,7 +35,7 @@ export async function createPatient(patient: object) {
 }
 
 // BP logs
-export async function fetchBpLogs(patientId: string) {
+export async function fetchBpLogs(patientId: number) {
   const res = await fetch(`${BASE}/patients/${patientId}/bp_logs`);
   if (!res.ok) throw new Error(`Failed to fetch BP logs: ${res.status}`);
   return res.json();
@@ -52,7 +52,7 @@ export async function createBpLog(patientId: string, log: object) {
 }
 
 // Radiology logs
-export async function fetchRadiologyReports(patientId: string) {
+export async function fetchRadiologyReports(patientId: number) {
   const res = await fetch(`${BASE}/patients/${patientId}/radiology_logs`);
   if (!res.ok) throw new Error(`Failed to fetch reports: ${res.status}`);
   return res.json();

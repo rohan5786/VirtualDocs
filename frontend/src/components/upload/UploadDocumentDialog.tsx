@@ -134,10 +134,10 @@ export function UploadDocumentDialog({ open, onOpenChange }: Props) {
                 <SelectContent>
                   {patients.map((p: Patient) => (
                     <SelectItem
-                      key={p.patient_id ?? p.patientID ?? p.id}
-                      value={String(p.patient_id ?? p.patientID ?? p.id)}
+                      key={p.patient_id}
+                      value={String(p.patient_id)}
                     >
-                      {p.full_name ?? p.fullName ?? `${p.firstName ?? ""} ${p.lastName ?? ""}`}
+                      {p.full_name}
                     </SelectItem>
                   ))}
                 </SelectContent>

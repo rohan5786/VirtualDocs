@@ -21,12 +21,12 @@ export function DocumentTimeline({ patientId }: { patientId: number }) {
 
   const { data: bpLogs = [] } = useQuery({
     queryKey: ["bplogs", patientId],
-    queryFn: () => fetchBpLogs(patientId + ""),
+    queryFn: () => fetchBpLogs(patientId),
   });
 
   const { data: radiologyReports = [] } = useQuery({
     queryKey: ["radiology", patientId],
-    queryFn: () => fetchRadiologyReports(patientId + ""),
+    queryFn: () => fetchRadiologyReports(patientId),
   });
 
   const allDocs: Doc[] = useMemo(() => [
@@ -81,7 +81,7 @@ export function DocumentTimeline({ patientId }: { patientId: number }) {
         )}
         {docs.map((doc) => (
           <TimelineItem
-            key={doc.kind === "bp" ? doc.data.log_id : doc.data.log_id}
+            key={doc.data.log_id}
             doc={doc}
             onSelect={() => setSelected(doc)}
           />
