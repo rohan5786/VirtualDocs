@@ -105,7 +105,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-2">
+        {/* <SidebarGroup className="mt-2">
           {!collapsed && (
             <SidebarGroupLabel className="px-2 text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/70">
               System
@@ -114,7 +114,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">{systemItems.map(renderItem)}</SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </SidebarContent>
 
       <UploadDocumentDialog open={uploadOpen} onOpenChange={setUploadOpen} />
