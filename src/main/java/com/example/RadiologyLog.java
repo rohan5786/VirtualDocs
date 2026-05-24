@@ -3,6 +3,7 @@ package com.example;
 public class RadiologyLog {
     public int patient_id, log_id;
     public String appt_date, imaging_type, body_part, findings, patient_status;
+    public boolean archived;
 
     public RadiologyLog(
         int patient_id,
@@ -11,7 +12,8 @@ public class RadiologyLog {
         String imaging_type,
         String body_part,
         String findings,
-        String patient_status
+        String patient_status,
+        boolean archived
     ) {
         this.patient_id = patient_id;
         this.log_id = log_id;
@@ -20,17 +22,6 @@ public class RadiologyLog {
         this.body_part = body_part;
         this.findings = findings;
         this.patient_status = patient_status;
-    }
-
-    public String toString() {
-        final String radiology_string = patient_id + " | " +
-            log_id + " | " +
-            appt_date + " | " +
-            imaging_type + " | " +
-            body_part + " | " +
-            findings + " | " +
-            patient_status;
-        
-            return radiology_string;
+        this.archived = archived;
     }
 }

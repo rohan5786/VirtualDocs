@@ -1,4 +1,15 @@
+import { Patient } from "@/data/types";
+
 const BASE = "/api";   // proxied to localhost:8080 by Vite (what runs the frontend)
+
+export async function archivePatient(id: number, isArchived: boolean) {
+  const res = await fetch(`${BASE}/patients/${id}/${isArchived ? 1 : 0}`);
+  if (!res.ok) throw new Error(`Failed to archive patient: ${res.status}`);
+
+  // so that it returns something and  json doesn't try to parse nothing
+  const text = await res.text();
+  return text ? JSON.parse(text) : true;
+}
 
 // patients only
 export async function fetchPatients() {
@@ -24,7 +35,7 @@ export async function createPatient(patient: object) {
 }
 
 // BP logs
-export async function fetchBpLogs(patientId: string) {
+export async function fetchBpLogs(patientId: number) {
   const res = await fetch(`${BASE}/patients/${patientId}/bp_logs`);
   if (!res.ok) throw new Error(`Failed to fetch BP logs: ${res.status}`);
   return res.json();
@@ -41,7 +52,7 @@ export async function createBpLog(patientId: string, log: object) {
 }
 
 // Radiology logs
-export async function fetchRadiologyReports(patientId: string) {
+export async function fetchRadiologyReports(patientId: number) {
   const res = await fetch(`${BASE}/patients/${patientId}/radiology_logs`);
   if (!res.ok) throw new Error(`Failed to fetch reports: ${res.status}`);
   return res.json();

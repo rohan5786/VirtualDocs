@@ -1,7 +1,9 @@
 package com.example;
+
 public class BPLog {
     public int patient_id, log_id, reading_number;
     public String appt_date, time_of_day, SBP, DBP, pulse, patient_status;
+    public boolean archived;
 
     public BPLog(
         int patient_id,
@@ -12,7 +14,8 @@ public class BPLog {
         String SBP,
         String DBP,
         String pulse,
-        String patient_status
+        String patient_status,
+        boolean archived
     ) {
         this.patient_id = patient_id;
         this.log_id = log_id;
@@ -23,18 +26,6 @@ public class BPLog {
         this.DBP = DBP;
         this.pulse = pulse;
         this.patient_status = patient_status;
-    }
-
-    public String toString() {
-        final String bp_string = patient_id + " | " + 
-            log_id + " | " + 
-            reading_number + " | " + 
-            appt_date + " | " + 
-            time_of_day + " | " + 
-            SBP + " | " + 
-            DBP + " | " + 
-            pulse + " | " + 
-            patient_status;
-        return bp_string;
+        this.archived = archived;
     }
 }

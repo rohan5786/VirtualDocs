@@ -1,9 +1,28 @@
+import { useState } from "react";
 import { Phone, Shield } from "lucide-react";
 import { calcAge } from "@/data/patients";
 import { formatDate } from "@/lib/format";
+import { archivePatient } from "@/lib/api";
 import type { Patient } from "@/data/types";
 
 export function PatientHeader({ patient }: { patient: Patient }) {
+  const [pending, setPending] = useState(false);
+
+  const handleButtonPress = async () => {
+    try {
+      setPending(true);
+      await archivePatient(patient.patient_id, !patient.archived);
+      window.location.reload(); // force reload so it updates dynamically
+    }
+    catch (error) {
+      console.error(error);
+      alert("Couldn't archive patient; check console for error");
+    }
+    finally {
+      setPending(false);
+    }
+  };
+
   return (
     <section className="rounded-[8px] border border-border bg-card">
       {/* Identity band */}
@@ -16,8 +35,14 @@ export function PatientHeader({ patient }: { patient: Patient }) {
             <h1 className="text-[20px] font-semibold tracking-tight">
               {patient.full_name}
             </h1>
+            {/* If the patient is archived, display the following */}
+            {patient.archived && (
+              <span className = "inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                Archived
+              </span>
+            )}
             <span className="text-[12px] text-muted-foreground tabular-nums">
-              {calcAge(patient.date_of_birth)} yrs · {patient.sex == 1 ? "Male" : "Female"} · DOB {formatDate(patient.date_of_birth)}
+              {calcAge(patient.date_of_birth)} yrs · {patient.sex == 1 ? "Male" : "Female"} · Date of Birth: {formatDate(patient.date_of_birth)}
             </span>
           </div>
           <dl className="mt-3 grid grid-cols-2 gap-x-8 gap-y-1.5 text-[12px] sm:grid-cols-4">
@@ -38,6 +63,19 @@ export function PatientHeader({ patient }: { patient: Patient }) {
               <dd className="mt-0.5 inline-flex items-center gap-1 font-medium">
                 <Shield className="h-3 w-3 text-muted-foreground" strokeWidth={1.75} />
                 {patient.insurance}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[10px] font-medium uppercase tracking-[0.06em] text-muted-foreground">Actions</dt>
+              <dd className="mt-0.5">
+                <button 
+                  type="button"
+                  onClick={handleButtonPress}
+                  disabled={pending}
+                  className="rounded bg-primary px-2 py-1 text-[11px] font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  {pending ? "Updating archive status... " : patient.archived ? "Un-Archive" : "Archive"}
+                </button>
               </dd>
             </div>
           </dl>
