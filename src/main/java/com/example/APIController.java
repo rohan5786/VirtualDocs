@@ -7,7 +7,6 @@ import java.sql.*;
 import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.io.File;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -54,12 +53,12 @@ public class APIController {
             @PathVariable int id,
             @RequestParam("file") MultipartFile file) throws Exception {
 
-        String uploadDir = "uploads/" + id + "/";
+        String uploadDir = System.getProperty("user.dir") + "/uploads/" + id + "/";
         Files.createDirectories(Paths.get(uploadDir));
 
         String filename = file.getOriginalFilename();
         String filepath = uploadDir + filename;
-        file.transferTo(new File(filepath));
+        file.transferTo(Paths.get(filepath));
 
         db.config();
         db.appendDocument(id, filepath);
@@ -72,7 +71,7 @@ public class APIController {
             @PathVariable int id,
             @PathVariable String filename) throws Exception {
 
-        String filepath = "uploads/" + id + "/" + filename;
+        String filepath = System.getProperty("user.dir") + "/uploads/" + id + "/" + filename;
         byte[] fileBytes = Files.readAllBytes(Paths.get(filepath));
 
         return ResponseEntity.ok()

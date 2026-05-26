@@ -40,28 +40,41 @@ export function UploadDocumentDialog({ open, onOpenChange }: Props) {
     queryFn: fetchPatients,
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedPatientId || !documentType || !selectedFile) {
       toast.error("Please select a patient, document type, and file.");
       return;
     }
 
-    console.log("Upload payload:", {
-      patientId: selectedPatientId,
-      documentType,
-      fileName: selectedFile.name,
-      notes,
-    });
+    try {
+      const form = new FormData();
+      form.append("file", selectedFile);
+      form.append("documentType", documentType); // sends "bp" or "imaging"
 
-    toast.success("Document queued for parsing", {
-      description: `${selectedFile.name} was attached to patient ${selectedPatientId}.`,
-    });
+      const response = await fetch(`/api/patients/${selectedPatientId}/documents`, {
+        method: "POST",
+        body: form,
+      });
 
-    setSelectedPatientId("");
-    setDocumentType("");
-    setNotes("");
-    setSelectedFile(null);
-    onOpenChange(false);
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      toast.success("Document uploaded successfully", {
+        description: `${selectedFile.name} was attached to patient ${selectedPatientId}.`,
+      });
+
+      setSelectedPatientId("");
+      setDocumentType("");
+      setNotes("");
+      setSelectedFile(null);
+      onOpenChange(false);
+
+    } catch (error) {
+      toast.error("Upload failed", {
+        description: "Could not upload the document. Please try again.",
+      });
+    }
   };
 
   return (
@@ -76,19 +89,13 @@ export function UploadDocumentDialog({ open, onOpenChange }: Props) {
 
         <div className="space-y-4">
           <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragOver(true);
-            }}
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onDrop={(e) => {
               e.preventDefault();
               setDragOver(false);
-
               const file = e.dataTransfer.files?.[0];
-              if (file) {
-                setSelectedFile(file);
-              }
+              if (file) setSelectedFile(file);
             }}
             className={`flex flex-col items-center justify-center rounded-[8px] border border-dashed p-7 text-center transition-colors ${
               dragOver ? "border-primary bg-primary-soft" : "border-border bg-secondary/50"
@@ -133,10 +140,7 @@ export function UploadDocumentDialog({ open, onOpenChange }: Props) {
                 </SelectTrigger>
                 <SelectContent>
                   {patients.map((p: Patient) => (
-                    <SelectItem
-                      key={p.patient_id}
-                      value={String(p.patient_id)}
-                    >
+                    <SelectItem key={p.patient_id} value={String(p.patient_id)}>
                       {p.full_name}
                     </SelectItem>
                   ))}
