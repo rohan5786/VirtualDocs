@@ -3,7 +3,6 @@ package com.example;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
-import java.sql.*;
 import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -49,9 +48,8 @@ public class APIController {
     }
 
     @PostMapping("/patients/{id}/documents")
-    public ResponseEntity<String> uploadDocument(
-            @PathVariable int id,
-            @RequestParam("file") MultipartFile file) throws Exception {
+    public ResponseEntity<String> uploadDocument(@PathVariable int id, @RequestParam("file") MultipartFile file)
+            throws Exception {
 
         String uploadDir = System.getProperty("user.dir") + "/uploads/" + id + "/";
         Files.createDirectories(Paths.get(uploadDir));
@@ -75,8 +73,8 @@ public class APIController {
         byte[] fileBytes = Files.readAllBytes(Paths.get(filepath));
 
         return ResponseEntity.ok()
-            .header("Content-Type", "application/pdf")
-            .header("Content-Disposition", "inline; filename=\"" + filename + "\"")
-            .body(fileBytes);
+                .header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=\"" + filename + "\"")
+                .body(fileBytes);
     }
 }

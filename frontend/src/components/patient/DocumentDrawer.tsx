@@ -76,7 +76,7 @@ export function DocumentDrawer({ doc, open, onOpenChange }: Props) {
               ))}
             </dl>
           )}
-          <div className="Graph">
+          {/* <div className="Graph">
             <Bar
               data={{
                 labels: ["Bro", "is", "not", "going", "back", "home"],
@@ -93,7 +93,7 @@ export function DocumentDrawer({ doc, open, onOpenChange }: Props) {
               }}
             >
             </Bar>
-          </div>
+          </div> */}
 
 
         </div>
