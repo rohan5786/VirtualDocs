@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { TimelineItem } from "./TimelineItem";
 import { DocumentDrawer } from "./DocumentDrawer";
-import { fetchBpLogs, fetchRadiologyReports, fetchPatientById } from "@/lib/api";
+import { fetchBPLogs, fetchRadiologyReports, fetchPatientById } from "@/lib/api";
 import type { BPLog, RadiologyReport } from "@/data/types";
 import { cn } from "@/lib/utils";
 import { FileText } from "lucide-react";
@@ -24,7 +24,7 @@ export function DocumentTimeline({ patientId }: { patientId: number }) {
 
   const { data: bpLogs = [] } = useQuery({
     queryKey: ["bplogs", patientId],
-    queryFn: () => fetchBpLogs(patientId),
+    queryFn: () => fetchBPLogs(patientId),
   });
 
   const { data: radiologyReports = [] } = useQuery({

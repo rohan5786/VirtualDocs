@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Activity, FileImage } from "lucide-react";
-import { fetchPatients, fetchBpLogs, fetchRadiologyReports } from "@/lib/api";
+import { fetchPatients, fetchBPLogs, fetchRadiologyReports } from "@/lib/api";
 import type { Patient } from "@/data/types";
 import { formatDate, formatRelative } from "@/lib/format";
 

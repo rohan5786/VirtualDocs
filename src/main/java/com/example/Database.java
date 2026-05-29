@@ -100,9 +100,9 @@ public class Database {
         sql.setString(3, bp.appt_date);
         sql.setString(4, bp.time_of_day);
         sql.setInt(5, bp.reading_number);
-        sql.setString(6, bp.SBP);
-        sql.setString(7, bp.DBP);
-        sql.setString(8, bp.pulse);
+        sql.setInt(6, bp.SBP);
+        sql.setInt(7, bp.DBP);
+        sql.setInt(8, bp.pulse);
         sql.setString(9, bp.patient_status);
         sql.setInt(10, bp.archived ? 1 : 0);
 
@@ -136,9 +136,9 @@ public class Database {
                 rs.getString(3),
                 rs.getString(4),
                 rs.getInt(5),
-                rs.getString(6),
-                rs.getString(7),
-                rs.getString(8),
+                rs.getInt(6),
+                rs.getInt(7),
+                rs.getInt(8),
                 rs.getString(9),
                 rs.getInt(10) == 1
             ));

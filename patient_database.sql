@@ -29,6 +29,10 @@ USE patient_database;
 -- ALTER TABLE bp_logs ADD PRIMARY KEY (patient_id, log_id);
 -- ALTER TABLE radiology_logs ADD PRIMARY KEY (patient_id, log_id);
 
-ALTER TABLE attributes ADD COLUMN archived TINYINT(1);
-ALTER TABLE bp_logs ADD COLUMN archived TINYINT(1);
-ALTER TABLE radiology_logs ADD COLUMN archived TINYINT(1);
+-- ALTER TABLE attributes ADD COLUMN archived TINYINT(1);
+-- ALTER TABLE bp_logs ADD COLUMN archived TINYINT(1);
+-- ALTER TABLE radiology_logs ADD COLUMN archived TINYINT(1);
+
+ALTER TABLE bp_logs MODIFY COLUMN SBP int;
+ALTER TABLE bp_logs MODIFY COLUMN DBP int;
+ALTER TABLE bp_logs MODIFY COLUMN pulse int;

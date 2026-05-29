@@ -46,20 +46,23 @@ public class App {
         //         true
         //     )
         // );
-        // db.addBPLogs(
-        //     new BPLog(
-        //         3,
-        //         2,
-        //         "2024-05-14",
-        //         "05:11:00",
-        //         76,
-        //         "114/39",
-        //         "139/41",
-        //         "190 BPM",
-        //         "bro not going back home",
-        //         true
-        //     )            
-        // );
+
+        for (int i = 1; i < 5; i++) {
+            db.addBPLogs(
+                new BPLog(
+                    3,
+                    i,
+                    "2024-05-14",
+                    "05:" + (11 + i) + ":00",
+                    75 + i,
+                    114,
+                    39,
+                    190,
+                    "bro not going back home",
+                    true
+                )            
+            );
+        }
 
         SpringApplication.run(App.class, args);
     }
