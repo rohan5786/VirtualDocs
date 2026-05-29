@@ -1,8 +1,8 @@
 package com.example;
 
 public class BPLog {
-    public int patient_id, log_id, reading_number;
-    public String appt_date, time_of_day, SBP, DBP, pulse, patient_status;
+    public int patient_id, log_id, reading_number, SBP, DBP, pulse;
+    public String appt_date, time_of_day, patient_status;
     public boolean archived;
 
     public BPLog(
@@ -11,9 +11,9 @@ public class BPLog {
         String appt_date,
         String time_of_day,
         int reading_number,
-        String SBP,
-        String DBP,
-        String pulse,
+        int SBP,
+        int DBP,
+        int pulse,
         String patient_status,
         boolean archived
     ) {

@@ -1,10 +1,12 @@
 package com.example;
 
 import org.springframework.web.bind.annotation.*;
-import java.sql.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.ResponseEntity;
 import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-// basically saying it's ok for frontend to run on 5173 while backend runs on 8080
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api")
@@ -12,52 +14,32 @@ public class APIController {
     private final static Database db = new Database();
 
     @GetMapping("/patients")
-    public List<Patient> getPatients() throws SQLException {
+    public List<Patient> getPatients() throws Exception {
         db.config();
         return db.allPatients();
     }
 
-    /**
-     * returns a patient by their id
-     * 
-     * @param id the id of the patient to be retrieved
-     * @return
-     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
-     */
     @GetMapping("/patients/{id}")
-    public Patient getPatientID(@PathVariable int id) throws SQLException {
+    public Patient getPatientID(@PathVariable int id) throws Exception {
         db.config();
-        return db.findPatientID(id).isEmpty() ? null : db.findPatientID(id).get(0);
+        List<Patient> results = db.findPatientID(id);
+        return results.isEmpty() ? null : results.get(0);
     }
 
-    /**
-     * returns all of the radiology logs belonging to a patient
-     * 
-     * @param id the id of the patient whose radiology logs are to be retrieved
-     * @return
-     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
-     */
     @GetMapping("/patients/{id}/radiology_logs")
-    public List<RadiologyLog> getPatientRadiologyID(@PathVariable int id) throws SQLException {
+    public List<RadiologyLog> getPatientRadiologyID(@PathVariable int id) throws Exception {
         db.config();
         return db.findRadiologyID(id);
     }
 
     @GetMapping("/patients/{id}/bp_logs")
-    public List<BPLog> getPatinetBPID(@PathVariable int id) throws SQLException {
+    public List<BPLog> getPatientBPID(@PathVariable int id) throws Exception {
         db.config();
         return db.findBPID(id);
     }
 
-    /**
-     * sets the archive status of a patient & their respective logs (to be un-modifiable)
-     * 
-     * @param id the id of the patient whose archive status is to be set
-     * @param isArchived the archive status you want to set
-     * @throws SQLException returns stack trace to debug w/JDBC driver or database error
-     */
     @GetMapping("/patients/{id}/{isArchived}")
-    public void archivePatientID(@PathVariable int id, @PathVariable int isArchived) throws SQLException {
+    public void archivePatientID(@PathVariable int id, @PathVariable int isArchived) throws Exception {
         db.config();
         final boolean archived = isArchived == 1;
         db.setArchivedPatient(id, archived);
@@ -65,4 +47,34 @@ public class APIController {
         db.setArchivedRadiologyLogs(id, archived);
     }
 
+    @PostMapping("/patients/{id}/documents")
+    public ResponseEntity<String> uploadDocument(@PathVariable int id, @RequestParam("file") MultipartFile file)
+            throws Exception {
+
+        String uploadDir = System.getProperty("user.dir") + "/uploads/" + id + "/";
+        Files.createDirectories(Paths.get(uploadDir));
+
+        String filename = file.getOriginalFilename();
+        String filepath = uploadDir + filename;
+        file.transferTo(Paths.get(filepath));
+
+        db.config();
+        db.appendDocument(id, filepath);
+
+        return ResponseEntity.ok("Uploaded: " + filename);
+    }
+
+    @GetMapping("/patients/{id}/documents/{filename}")
+    public ResponseEntity<byte[]> getDocument(
+            @PathVariable int id,
+            @PathVariable String filename) throws Exception {
+
+        String filepath = System.getProperty("user.dir") + "/uploads/" + id + "/" + filename;
+        byte[] fileBytes = Files.readAllBytes(Paths.get(filepath));
+
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=\"" + filename + "\"")
+                .body(fileBytes);
+    }
 }

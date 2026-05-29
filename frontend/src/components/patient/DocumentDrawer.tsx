@@ -1,13 +1,14 @@
+import { useEffect, useState } from "react";
+
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-// import { Button } from "@/components/ui/button";
 import { Flag, CheckCircle2, Activity, FileImage } from "lucide-react";
-// import { toast } from "sonner";
 import type { BPLog, RadiologyReport } from "@/data/types";
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale } from "chart.js/auto";
-import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, PointElement, LineElement, LineController } from "chart.js/auto";
+import { Line } from "react-chartjs-2";
+import { fetchBPLogs, fetchLogDates, fetchRadiologyReports } from "@/lib/api";
 
 type Doc = { kind: "bp"; data: BPLog } | { kind: "radiology"; data: RadiologyReport };
-ChartJS.register(CategoryScale, LinearScale, BarElement);
+ChartJS.register(LineController, LineElement, PointElement, LineElement, CategoryScale);
 
 interface Props {
   doc: Doc | null;
@@ -22,6 +23,54 @@ export function DocumentDrawer({ doc, open, onOpenChange }: Props) {
   const title = isBP ? "BP Log" : doc.data.imaging_type;
   const date = isBP ? doc.data.appt_date : doc.data.appt_date;
   const Icon = isBP ? Activity : FileImage;
+
+  const [BPLogs, setBPLogs] = useState<BPLog[]>([]);
+
+  // fetch em and set em safely
+  useEffect(() => {
+    fetchBPLogs(doc.data.patient_id).then(setBPLogs).catch(console.error);
+  }, [doc?.data.patient_id]);
+
+  {/* sort the bp logs on appt date,  then time of day*/}
+  const sortedBPLogs = [...BPLogs].sort(
+    (a,b) => {
+      if ((new Date(a.appt_date)).getTime() !== (new Date(b.appt_date)).getTime()) {
+        return (new Date(a.appt_date)).getTime() - (new Date(b.appt_date)).getTime();
+      }
+      return (new Date(a.time_of_day)).getTime() - (new Date(b.time_of_day)).getTime();
+    }
+  );
+
+  const allBPChartData = {
+    labels: sortedBPLogs.map((log) => log.appt_date),
+    datasets: [
+      {
+        label: "SBP",
+        data: sortedBPLogs.map((log) => log.SBP),
+        borderColor: "rgb(255, 0, 0)",
+        backgroundColor: "rgba(255, 255, 255, 1)",
+        tension: 0.4,
+        pointRadius: 3,
+      },
+      {
+        label: "DBP",
+        data: sortedBPLogs.map((log) => log.DBP),
+        borderColor: "rgb(0, 255, 0)",
+        backgroundColor: "rgba(255, 255, 255, 1)",
+        tension: 0.4,
+        pointRadius: 3,
+      },
+      {
+        label: "Pulse",
+        data: sortedBPLogs.map((log) => log.pulse),
+        borderColor: "rgb(0, 0, 255)",
+        backgroundColor: "rgba(255, 255, 255, 1)",
+        tension: 0.4,
+        pointRadius: 3,
+      },
+    ]
+  };
+
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -44,9 +93,6 @@ export function DocumentDrawer({ doc, open, onOpenChange }: Props) {
               {[
                 ["Log ID", doc.data.log_id],
                 ["Appt Date", doc.data.appt_date],
-                // ["Period", `${doc.data.startDate} → ${doc.data.endDate}`],
-                // ["Avg Systolic", `${doc.data.averageSystolic} mmHg`],
-                // ["Avg Diastolic", `${doc.data.averageDiastolic} mmHg`],
                 ["SBP", doc.data.SBP],
                 ["DBP", doc.data.DBP],
                 ["Pulse", doc.data.pulse],
@@ -76,26 +122,10 @@ export function DocumentDrawer({ doc, open, onOpenChange }: Props) {
               ))}
             </dl>
           )}
+          {/* Basically grpahing all lines over time for all logs */}
           <div className="Graph">
-            <Bar
-              data={{
-                labels: ["Bro", "is", "not", "going", "back", "home"],
-                datasets: [
-                  {
-                    label: "main",
-                    data: [200, 150, 500, 400, 250, 300],
-                  },
-                  {
-                    label: "nonmain",
-                    data: [300, 350, 0, 100, 250, 200],
-                  }
-                ],
-              }}
-            >
-            </Bar>
+            <Line data={allBPChartData}/>
           </div>
-
-
         </div>
       </SheetContent>
     </Sheet>

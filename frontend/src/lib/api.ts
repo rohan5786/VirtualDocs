@@ -35,13 +35,19 @@ export async function createPatient(patient: object) {
 }
 
 // BP logs
-export async function fetchBpLogs(patientId: number) {
+export async function fetchBPLogs(patientId: number) {
   const res = await fetch(`${BASE}/patients/${patientId}/bp_logs`);
   if (!res.ok) throw new Error(`Failed to fetch BP logs: ${res.status}`);
   return res.json();
 }
 
-export async function createBpLog(patientId: string, log: object) {
+export async function fetchLogDates(logs: Promise<any>): Promise<string[]> {
+  const data = await logs;
+  if (!Array.isArray(data)) return [];
+  return [...new Set(data.flatMap(obj => Object.keys(obj)))];
+}
+
+export async function createBPLog(patientId: string, log: object) {
   const res = await fetch(`${BASE}/patients/${patientId}/bp_logs`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

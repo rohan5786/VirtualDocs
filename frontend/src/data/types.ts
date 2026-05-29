@@ -22,6 +22,7 @@ export interface BPLog {
   patient_id: number;
   log_id: number;
   appt_date: string;
+  time_of_day: string;
   SBP: string;
   DBP: string;
   pulse: string;
