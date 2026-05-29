@@ -232,7 +232,7 @@ public class Database {
         updateStmt.executeUpdate();
         updateStmt.close();
     }
-
+    
     public List<Patient> allPatients() throws SQLException {
         final String query = "SELECT * FROM attributes";
         PreparedStatement sql = db_connection.prepareStatement(query);
